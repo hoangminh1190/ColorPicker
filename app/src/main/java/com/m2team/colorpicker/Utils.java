@@ -3,12 +3,16 @@ package com.m2team.colorpicker;
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Hoang Minh on 6/15/2015.
@@ -137,4 +141,37 @@ public class Utils {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
+    public static String getPrefString(Context context, String key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.PREF_FILE_NAME, Context.MODE_MULTI_PROCESS);
+        return sharedPreferences.getString(key, "");
+    }
+
+    public static int getPrefInt(Context context, String key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.PREF_FILE_NAME, Context.MODE_MULTI_PROCESS);
+        return sharedPreferences.getInt(key, 0);
+    }
+
+    public static boolean getPrefBoolean(Context context, String key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.PREF_FILE_NAME, Context.MODE_MULTI_PROCESS);
+        return sharedPreferences.getBoolean(key, false);
+    }
+
+    public static void putPrefValue(Context context, String key, Object value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (value instanceof Integer)
+            editor.putInt(key, Integer.parseInt(value.toString()));
+        else if (value instanceof String)
+            editor.putString(key, value.toString());
+        editor.commit();
+    }
+
+    public static void putStringSetValue(Context context, String key, String value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Set<String> stringSet = sharedPreferences.getStringSet(key, new HashSet<String>());
+        stringSet.add(value);
+        editor.putStringSet(key, stringSet);
+        editor.commit();
+    }
 }

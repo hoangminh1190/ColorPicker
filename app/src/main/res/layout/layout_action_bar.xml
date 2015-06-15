@@ -3,14 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e0e0e0"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:weightSum="5">
 
     <com.rey.material.widget.Button
         android:id="@+id/btn_copy"
         style="@style/FlatButtonRippleStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         android:gravity="center"
         android:text="COPY"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
@@ -19,9 +21,10 @@
     <com.rey.material.widget.Button
         android:id="@+id/btn_detail"
         style="@style/FlatButtonRippleStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         android:gravity="center"
         android:text="DETAIL"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
@@ -30,53 +33,36 @@
     <com.rey.material.widget.Button
         android:id="@+id/btn_share"
         style="@style/FlatButtonRippleStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         android:gravity="center"
         android:text="SHARE"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
         android:textColor="#FF000000" />
 
-    <com.rey.material.widget.Button
-        android:id="@+id/btn_setting"
-        style="@style/FlatButtonRippleStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:text="SETTING"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
 
     <com.rey.material.widget.Button
         android:id="@+id/btn_bookmark"
         style="@style/FlatButtonRippleStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         android:gravity="center"
         android:text="BOOKMARK"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
         android:textColor="#FF000000" />
 
-    <com.rey.material.widget.Button
-        android:id="@+id/btn_compare"
-        style="@style/FlatButtonRippleStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:text="COMPARE"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
 
     <com.rey.material.widget.Button
         android:id="@+id/btn_color_recent_list"
         style="@style/FlatButtonRippleStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         android:gravity="center"
         android:text="RECENT LIST"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"

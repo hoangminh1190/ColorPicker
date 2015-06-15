@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.rey.material.widget.EditText
+        style="@style/Material.Widget.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:hint="Signal strength"
+        android:paddingTop="8dp"
+        android:text="Excellent"
+        android:textColor="@color/abc_primary_text_material_dark"
+        android:textDirection="locale"
+        app:et_dividerHeight="0dp"
+        app:et_supportMode="none" />
+
+    <com.rey.material.widget.EditText
+        style="@style/Material.Widget.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:hint="Security"
+        android:paddingTop="8dp"
+        android:text="802.1x EAP"
+        android:textColor="@color/abc_primary_text_material_dark"
+        android:textDirection="locale"
+        app:et_dividerHeight="0dp"
+        app:et_supportMode="none" />
+
+    <com.rey.material.widget.EditText
+        android:id="@+id/custom_et_password"
+        style="@style/Material.Widget.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:paddingTop="8dp"
+        android:textColor="@color/abc_primary_text_material_dark"
+        android:textColorHint="@color/abc_secondary_text_material_dark"
+        android:textDirection="locale"
+        app:et_supportMode="charCounter" />
+
+    <com.rey.material.widget.CheckBox
+        style="@style/Material.Drawable.CheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="24dp"
+        android:text="Show password"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/abc_primary_text_material_dark" />
+
+</LinearLayout>

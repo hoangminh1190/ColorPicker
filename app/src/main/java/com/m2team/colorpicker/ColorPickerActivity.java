@@ -1,5 +1,7 @@
 package com.m2team.colorpicker;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,22 +14,28 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.rey.material.app.Dialog;
+import com.rey.material.app.DialogFragment;
+import com.rey.material.app.SimpleDialog;
 import com.rey.material.widget.SnackBar;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 
-public class ColorPickerActivity extends AppCompatActivity {
+public class ColorPickerActivity extends AppCompatActivity implements View.OnClickListener {
     private final int TIME_TOAST = 1500;
     SubsamplingScaleImageView imageView;
     TextView txtTextView;
@@ -37,6 +45,8 @@ public class ColorPickerActivity extends AppCompatActivity {
     Bitmap bitmap;
     Uri uri;
     ColorSpaceConverter converter = new ColorSpaceConverter();
+    String copyColor;
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +79,13 @@ public class ColorPickerActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setCustomView(R.layout.layout_action_bar);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.layout_action_bar, null);
+            view.findViewById(R.id.btn_copy).setOnClickListener(this);
+            view.findViewById(R.id.btn_bookmark).setOnClickListener(this);
+            view.findViewById(R.id.btn_detail).setOnClickListener(this);
+            view.findViewById(R.id.btn_color_recent_list).setOnClickListener(this);
+            view.findViewById(R.id.btn_share).setOnClickListener(this);
+            actionBar.setCustomView(view);
         }
     }
 
@@ -121,7 +137,25 @@ public class ColorPickerActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        // Locate MenuItem with ShareActionProvider
+       /* MenuItem item =  menu.findItem(R.id.menu_item_share);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+        Intent mShareIntent = new Intent();
+        mShareIntent.setAction(Intent.ACTION_SEND);
+        mShareIntent.setType("text/plain");
+        mShareIntent.putExtra(Intent.EXTRA_TEXT, "From me to you, this text is new.");
+        setShareIntent(mShareIntent);*/
+
         return true;
+    }
+
+    // Call to update the share intent
+    private void setShareIntent(Intent shareIntent) {
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
     }
 
     @Override
@@ -142,6 +176,7 @@ public class ColorPickerActivity extends AppCompatActivity {
     private void getColorPixel(Bitmap bitmap, int x, int y) {
         int pixel = bitmap.getPixel(x, y);
         String hex = String.format("#%02x%02x%02x", Color.red(pixel), Color.green(pixel), Color.blue(pixel));
+        copyColor = hex;
         bg_color.setBackgroundColor(Color.parseColor(hex));
         float[] hsv = new float[3];
         Color.colorToHSV(pixel, hsv);
@@ -179,6 +214,64 @@ public class ColorPickerActivity extends AppCompatActivity {
                 .text(text)
                 .duration(TIME_TOAST).actionText("")
                 .show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_copy:
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData primaryClip = ClipData.newPlainText("", copyColor);
+                clipboardManager.setPrimaryClip(primaryClip);
+                showMessage("Copied " + copyColor + " to clipboard");
+                break;
+            /*case R.id.btn_share:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Intent.EXTRA_TEXT, copyColor);
+                startActivity(intent);
+                break;*/
+            case R.id.btn_bookmark:
+                Utils.putStringSetValue(mContext, Constant.COLOR_BOOKMARK_LIST, copyColor);
+                showMessage("Added to bookmark");
+                break;
+            case R.id.btn_color_recent_list:
+                clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                primaryClip = clipboardManager.getPrimaryClip();
+                if (primaryClip != null) {
+                    ClipData.Item item = primaryClip.getItemAt(0);
+                    if (item != null) {
+                        Utils.putStringSetValue(mContext, Constant.COLOR_RECENT_LIST, item.getText().toString());
+                    }
+                }
+                break;
+            case R.id.btn_detail:
+                SimpleDialog.Builder builder = new SimpleDialog.Builder(R.style.SimpleDialog) {
+
+                    @Override
+                    protected void onBuildDone(Dialog dialog) {
+                        dialog.layoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    }
+
+                    @Override
+                    public void onPositiveActionClicked(DialogFragment fragment) {
+                        super.onPositiveActionClicked(fragment);
+                    }
+
+                    @Override
+                    public void onNegativeActionClicked(DialogFragment fragment) {
+                        super.onNegativeActionClicked(fragment);
+                    }
+                };
+
+                builder.title("Google Wi-Fi")
+                        .positiveAction("CONNECT")
+                        .negativeAction("CANCEL")
+                        .contentView(R.layout.layout_dialog_color_detail);
+                DialogFragment fragment = DialogFragment.newInstance(builder);
+                fragment.show(getSupportFragmentManager(), null);
+                break;
+        }
     }
 
     private class LoadBitmapAsyncTask extends AsyncTask<String, Void, Bitmap> {

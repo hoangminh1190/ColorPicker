@@ -7,4 +7,6 @@
     <string name="action_dialog_color">Color picker dialog</string>
     <string name="action_bookmark_list">Bookmark List</string>
     <string name="action_convert">Convert color</string>
+    <string name="action_recent_list">Recent colors</string>
+    <string name="action_compare">Compare colors</string>
 </resources>
