@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Color Picker</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_popular_color">Popular Color List</string>
+    <string name="action_dialog_color">Color picker dialog</string>
+    <string name="action_bookmark_list">Bookmark List</string>
+    <string name="action_convert">Convert color</string>
+</resources>

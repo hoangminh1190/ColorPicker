@@ -1,0 +1,34 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.rey.material.widget.Button
+        android:id="@+id/btn_take_photo"
+        style="@style/FlatWaveButtonRippleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="Take a photo"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+        android:textColor="#FF000000" />
+
+    <com.rey.material.widget.Button
+        android:id="@+id/btn_load_photo"
+        style="@style/FlatWaveButtonRippleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_take_photo"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Load a photo"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+        android:textColor="#FF000000" />
+
+    <com.rey.material.widget.SnackBar
+        android:id="@+id/snackbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" />
+</RelativeLayout>

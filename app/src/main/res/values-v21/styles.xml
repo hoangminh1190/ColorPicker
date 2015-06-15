@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ColorTheme" parent="Theme.AppCompat.Light">
+        <item name="android:background">#e0e0e0</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:windowActionBarOverlay">false</item>
+    </style>
+</resources>
