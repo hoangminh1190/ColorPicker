@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Color Picker</string>
+    <string name="app_name">Sample</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -9,4 +9,26 @@
     <string name="action_convert">Convert color</string>
     <string name="action_recent_list">Recent colors</string>
     <string name="action_compare">Compare colors</string>
+    <string name="title_activity_palette_background">PaletteBackgroundActivity</string>
+    <string name="activity_color_picker_confirm_save_message">Color saved</string>
+    <string name="menu_color_picker_action_flash">Turn on flash</string>
+    <string name="menu_color_picker_action_done">Done</string>
+    <string name="action_help">Help</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="action_share">Share</string>
+    <string-array name="color_mode">
+        <item>HEX</item>
+        <item>RGB</item>
+        <item>HSV</item>
+        <item>HSL</item>
+        <item>CMYK</item>
+        <item>Lab</item>
+        <item>XYZ</item>
+    </string-array>
+    <string-array name="color_mode_convert">
+        <item>HEX</item>
+        <item>RGB</item>
+        <item>HSV</item>
+        <item>CMYK</item>
+    </string-array>
 </resources>

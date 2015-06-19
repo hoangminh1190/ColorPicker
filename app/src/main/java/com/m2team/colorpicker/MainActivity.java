@@ -5,13 +5,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.m2team.colorpicker.utils.Applog;
+import com.m2team.colorpicker.utils.Utils;
 import com.rey.material.widget.Button;
 import com.rey.material.widget.SnackBar;
 
@@ -19,10 +22,11 @@ import java.io.File;
 import java.io.IOException;
 
 
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_PICKUP = 2;
-    Button btn_take_photo, btn_load_photo;
+    Button btn_take_photo, btn_load_photo, btn_live_picker;
     SnackBar mSnackBar;
     Context mContext;
     String uri;
@@ -36,28 +40,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_take_photo.setOnClickListener(this);
         btn_load_photo = (Button) findViewById(R.id.btn_load_photo);
         btn_load_photo.setOnClickListener(this);
+        btn_live_picker = (Button) findViewById(R.id.btn_live_picker);
+        btn_live_picker.setOnClickListener(this);
         mSnackBar = (SnackBar) findViewById(R.id.snackbar);
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+
+        // Fetch and store ShareActionProvider
+        Intent mShareIntent = new Intent();
+        mShareIntent.setAction(Intent.ACTION_SEND);
+        mShareIntent.setType("text/plain");
+        mShareIntent.putExtra(Intent.EXTRA_TEXT, "Download " + getString(R.string.app_name) + " from Google Play Store");
+        ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(mShareIntent);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingActivity.class));
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -81,6 +93,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivityForResult(intent, REQUEST_IMAGE_PICKUP);
                 break;
 
+            case R.id.btn_live_picker:
+                Intent intentColorPickerActivity = new Intent(this, LiveColorPickerActivity.class);
+                startActivity(intentColorPickerActivity);
+                break;
+
         }
     }
 
@@ -90,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // Create the File where the photo should go
             File photoFile = null;
             try {
-                photoFile = createImageFile2();
+                photoFile = Utils.createImageFile(mSnackBar, "Camera_" + System.currentTimeMillis());
             } catch (IOException ex) {
                 Applog.e(ex.getMessage());
             }
@@ -111,62 +128,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Intent intent = new Intent(mContext, ColorPickerActivity.class);
+            Intent intent = new Intent(mContext, ImageColorPickerActivity.class);
             intent.putExtra("uri", uri);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } else if (requestCode == REQUEST_IMAGE_PICKUP && resultCode == RESULT_OK) {
             Uri uri = data.getData();
             String path = Utils.getPath(mContext, uri);
-            Applog.d("PAAAAAAA: " + path);
-            Intent intent = new Intent(mContext, ColorPickerActivity.class);
+            Intent intent = new Intent(mContext, ImageColorPickerActivity.class);
             intent.putExtra("uri", path);
             intent.putExtra("uri_raw", uri);
             startActivity(intent);
         }
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String imageFileName = "JPEG_" + System.currentTimeMillis();
-        File dir = getExternalCacheDir();
-        if (dir.exists()) {
 
-        } else {
-            dir.mkdir();
-        }
-        //File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        if (dir.canRead() && dir.canWrite()) {
-            File image = File.createTempFile(
-                    imageFileName,  /* prefix */
-                    ".jpg",         /* suffix */
-                    dir      /* directory */
-            );
-            return image;
-        }
-        return null;
-    }
-
-    private File createImageFile2() throws IOException {
-        // Create an image file name
-        String imageFileName = "JPEG_" + System.currentTimeMillis();
-        File dir = new File(Environment.getExternalStorageDirectory() + "/CP/");
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-        //File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            File image = File.createTempFile(
-                    imageFileName,  /* prefix */
-                    ".jpg",         /* suffix */
-                    dir      /* directory */
-            );
-            return image;
-        } else {
-            mSnackBar.applyStyle(R.style.SnackBarSingleLine)
-                    .text("Cannot create taken photo on your device storage")
-                    .duration(2000)
-                    .show();
-        }
-        return null;
-    }
 }

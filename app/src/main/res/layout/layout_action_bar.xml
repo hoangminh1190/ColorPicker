@@ -7,64 +7,32 @@
     android:weightSum="5">
 
     <com.rey.material.widget.Button
+        android:id="@+id/btn_detect_color"
+        style="@style/FlatButtonActionBar"
+        android:background="@drawable/ic_done_black_24dp"
+
+        />
+
+    <com.rey.material.widget.Button
         android:id="@+id/btn_copy"
-        style="@style/FlatButtonRippleStyle"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="COPY"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
+        style="@style/FlatButtonActionBar"
+        android:background="@drawable/ic_content_copy_black_24dp"
+
+        />
 
     <com.rey.material.widget.Button
         android:id="@+id/btn_detail"
-        style="@style/FlatButtonRippleStyle"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="DETAIL"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
-
-    <com.rey.material.widget.Button
-        android:id="@+id/btn_share"
-        style="@style/FlatButtonRippleStyle"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="SHARE"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
-
+        style="@style/FlatButtonActionBar"
+        android:background="@drawable/ic_info_black_24dp" />
 
     <com.rey.material.widget.Button
         android:id="@+id/btn_bookmark"
-        style="@style/FlatButtonRippleStyle"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="BOOKMARK"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
+        style="@style/FlatButtonActionBar"
+        android:background="@drawable/ic_bookmark_black_24dp" />
 
 
     <com.rey.material.widget.Button
         android:id="@+id/btn_color_recent_list"
-        style="@style/FlatButtonRippleStyle"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="RECENT LIST"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
+        style="@style/FlatButtonActionBar"
+        android:background="@drawable/ic_list_black_24dp" />
 </LinearLayout>

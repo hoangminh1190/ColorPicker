@@ -25,6 +25,18 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
         android:textColor="#FF000000" />
 
+    <com.rey.material.widget.Button
+        android:id="@+id/btn_live_picker"
+        style="@style/FlatWaveButtonRippleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_load_photo"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Live Picker"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+        android:textColor="#FF000000" />
+
     <com.rey.material.widget.SnackBar
         android:id="@+id/snackbar"
         android:layout_width="match_parent"

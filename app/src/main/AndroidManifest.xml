@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.m2team.colorpicker">
 
+    <!-- Camera ! -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -9,6 +11,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
     <application
         android:allowBackup="true"
@@ -24,11 +27,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".ColorPickerActivity"
+            android:name=".ImageColorPickerActivity"
             android:theme="@style/ColorTheme">
 
+        </activity>
+        <activity
+            android:name=".MainSettingActivity"
+            android:theme="@style/Theme.MainSetting"></activity>
+        <activity android:name=".colorpallette.ItemDetailActivity" />
+        <activity
+            android:name=".function.PaletteBackgroundActivity"
+            android:theme="@style/Theme.MainSetting"></activity>
+        <activity android:name=".LiveColorPickerActivity" />
+        <activity
+            android:name=".SettingActivity"
+            android:theme="@style/Theme.AppCompat.Light">
 
         </activity>
     </application>
