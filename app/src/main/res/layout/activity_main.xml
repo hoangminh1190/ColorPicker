@@ -36,6 +36,17 @@
         android:text="Live Picker"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
         android:textColor="#FF000000" />
+    <com.rey.material.widget.Button
+        android:id="@+id/btn_create_palette"
+        style="@style/FlatWaveButtonRippleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_live_picker"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Create custom palette"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+        android:textColor="#FF000000" />
 
     <com.rey.material.widget.SnackBar
         android:id="@+id/snackbar"

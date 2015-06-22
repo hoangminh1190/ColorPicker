@@ -1,58 +1,55 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll1"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10">
 
-    <com.rey.material.widget.EditText
-        style="@style/Material.Widget.EditText"
+    <View
+        android:id="@+id/detail_color"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:hint="Signal strength"
-        android:paddingTop="8dp"
-        android:text="Excellent"
-        android:textColor="@color/abc_primary_text_material_dark"
-        android:textDirection="locale"
-        app:et_dividerHeight="0dp"
-        app:et_supportMode="none" />
+        android:layout_height="0dp"
+        android:layout_weight="2" />
 
-    <com.rey.material.widget.EditText
-        style="@style/Material.Widget.EditText"
+    <TextView
+        android:id="@+id/tv_hex"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_rgb"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_hsv"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_hsl"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_cmyk"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_lab"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_xyz"
+        style="@style/ColorDetailTextView" />
+
+    <com.rey.material.widget.Button
+        android:id="@+id/btn_close"
+        style="@style/FlatWaveButtonRippleStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:hint="Security"
-        android:paddingTop="8dp"
-        android:text="802.1x EAP"
-        android:textColor="@color/abc_primary_text_material_dark"
-        android:textDirection="locale"
-        app:et_dividerHeight="0dp"
-        app:et_supportMode="none" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="CLOSE"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+        android:textColor="#FF000000" />
 
-    <com.rey.material.widget.EditText
-        android:id="@+id/custom_et_password"
-        style="@style/Material.Widget.EditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:paddingTop="8dp"
-        android:textColor="@color/abc_primary_text_material_dark"
-        android:textColorHint="@color/abc_secondary_text_material_dark"
-        android:textDirection="locale"
-        app:et_supportMode="charCounter" />
-
-    <com.rey.material.widget.CheckBox
-        style="@style/Material.Drawable.CheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="24dp"
-        android:text="Show password"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/abc_primary_text_material_dark" />
 
 </LinearLayout>

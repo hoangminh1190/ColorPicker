@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.aidangrabe.materialcolorpicker.views.ColorCircleView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/color_view"
+    android:layout_width="48dp"
+    android:layout_height="48dp" />

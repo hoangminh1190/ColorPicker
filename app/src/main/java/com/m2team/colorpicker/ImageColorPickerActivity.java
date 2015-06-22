@@ -26,7 +26,9 @@ import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.m2team.colorpicker.function.ColorDetailDialogFragment;
 import com.m2team.colorpicker.function.ColorDetectDialogFragment;
+import com.m2team.colorpicker.function.LongPressDialogFragment;
 import com.m2team.colorpicker.utils.Applog;
 import com.m2team.colorpicker.utils.Constant;
 import com.m2team.colorpicker.utils.Utils;
@@ -39,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageColorPickerActivity extends AppCompatActivity implements View.OnClickListener {
-    private final int TIME_TOAST = 1500;
     Button btn_detect_color;
     SubsamplingScaleImageView imageView;
     TextView txtTextView;
@@ -47,7 +48,6 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
     SnackBar mSnackBar;
     Context mContext;
     Bitmap bitmap;
-    Uri uri;
     String fullInfoColor, favoriteColor;
     private ShareActionProvider mShareActionProvider;
 
@@ -64,12 +64,15 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
+                String strUri = "";
                 String path = bundle.getString("uri");
-                uri = (Uri) bundle.get("uri_raw");
+                Uri uri = (Uri) bundle.get("uri_raw");
+                if (uri != null)
+                    strUri = uri.toString();
                 Applog.d("uri " + path);
                 Applog.d("uri raw " + uri);
                 LoadBitmapAsyncTask loadBitmapAsyncTask = new LoadBitmapAsyncTask();
-                loadBitmapAsyncTask.execute(path);
+                loadBitmapAsyncTask.execute(path, strUri);
             }
         }
         initGesture();
@@ -105,12 +108,13 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
 
             @Override
             public void onLongPress(MotionEvent e) {
-                if (imageView.isReady()) {
-                    PointF sCoord = imageView.viewToSourceCoord(e.getX(), e.getY());
-                    Toast.makeText(getApplicationContext(), "Long press: " + ((int) sCoord.x) + ", " + ((int) sCoord.y), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Long press: Image not ready", Toast.LENGTH_SHORT).show();
-                }
+                onPixelChange(e);
+                LongPressDialogFragment fragment = LongPressDialogFragment.newInstance(mContext);
+                Bundle bundle = new Bundle();
+                bundle.putString("value", favoriteColor);
+                bundle.putString("fragmentId", "main");
+                fragment.setArguments(bundle);
+                fragment.show(getSupportFragmentManager(), "longPressDialog");
             }
 
             @Override
@@ -139,7 +143,6 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
         });
     }
 
-
     private void getColorPixel(Bitmap bitmap, int x, int y) {
         int pixel = bitmap.getPixel(x, y);
         fullInfoColor = Utils.setFullInfoColor(pixel);
@@ -149,10 +152,10 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
             String[] hsv = Utils.getOneColorMode(fullInfoColor, 2).split(Constant.DOLLAR_TOKEN);
             if (hsv.length == 3)
                 txtTextView.setText("HEX: " + hex + "\n"
-                                + "RGB: " + Color.red(pixel) + " " + Color.green(pixel) + " " + Color.blue(pixel) + "\n"
-                                + "HSV: " + Utils.roundZero(hsv[0]) + Constant.degree + " " + Utils.roundZero(Float.parseFloat(hsv[1]) * 100) + "% " + Utils.roundZero(Float.parseFloat(hsv[2]) * 100) + "%"
+                                + "RGB: " + Utils.setStyleRGB(new int[]{Color.red(pixel), Color.green(pixel), Color.blue(pixel)}) + "\n"
+                                + "HSV: " + Utils.setStyleHSV_HSL(hsv)
                 );
-            txtTextView.setTextColor(Color.parseColor(hex));
+            //txtTextView.setTextColor(Color.parseColor(hex));
             bg_color.setBackgroundColor(Color.parseColor(hex));
         }
     }
@@ -215,10 +218,11 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
                 if (TextUtils.isEmpty(favoriteColor)) {
                     Utils.showMessage(mSnackBar, "Select at least one color");
                 } else {
-                    intent = new Intent(this, MainSettingActivity.class);
-                    intent.putExtra("index", MainSettingActivity.Tab.DETAIL.ordinal());
-                    intent.putExtra("detailColor", fullInfoColor);
-                    startActivity(intent);
+                    ColorDetailDialogFragment colorDetailDialogFragment = new ColorDetailDialogFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("detailColor", fullInfoColor);
+                    colorDetailDialogFragment.setArguments(bundle);
+                    colorDetailDialogFragment.show(getSupportFragmentManager(), "detailDialog");
                 }
                 break;
         }
@@ -228,22 +232,6 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_image_picker, menu);
-        // Locate MenuItem with ShareActionProvider
-        MenuItem item = menu.findItem(R.id.menu_item_share);
-
-        if (TextUtils.isEmpty(favoriteColor)) {
-            Utils.showMessage(mSnackBar, "You must select one color to share");
-        } else {
-            // Fetch and store ShareActionProvider
-            Intent mShareIntent = new Intent();
-            mShareIntent.setAction(Intent.ACTION_SEND);
-            mShareIntent.setType("text/plain");
-            mShareIntent.putExtra(Intent.EXTRA_TEXT, favoriteColor);
-            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-            if (mShareActionProvider != null) {
-                mShareActionProvider.setShareIntent(mShareIntent);
-            }
-        }
         return true;
     }
 
@@ -255,9 +243,6 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
         int id = item.getItemId();
         Intent intent = new Intent(mContext, MainSettingActivity.class);
         switch (id) {
-            case R.id.action_settings:
-                intent.putExtra("index", MainSettingActivity.Tab.DETAIL.ordinal());
-                break;
             case R.id.action_bookmark_list:
                 intent.putExtra("index", MainSettingActivity.Tab.BOOKMARK.ordinal());
                 break;
@@ -270,8 +255,10 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
             case R.id.action_compare:
                 intent.putExtra("index", MainSettingActivity.Tab.COMPARE.ordinal());
                 break;
-            case R.id.action_dialog_color:
-                intent.putExtra("index", MainSettingActivity.Tab.PALETTE_BACKGROUND.ordinal());
+            case android.R.id.home:
+                intent = new Intent(mContext, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 break;
         }
         startActivity(intent);
@@ -286,8 +273,10 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
             Bitmap bitmap = BitmapFactory.decodeFile(params[0]);
             if (bitmap == null) {
                 try {
-                    InputStream inputStream = getContentResolver().openInputStream(uri);
-                    bitmap = BitmapFactory.decodeStream(inputStream);
+                    if (!TextUtils.isEmpty(params[1])) {
+                        InputStream inputStream = getContentResolver().openInputStream(Uri.parse(params[1]));
+                        bitmap = BitmapFactory.decodeStream(inputStream);
+                    }
                     return bitmap;
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();

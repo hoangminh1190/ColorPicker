@@ -1,0 +1,1 @@
+include ':app', ':imageviewlibrary', ':lib', ':android-material-design-colors-2.0.0', ':lcolorpallette@1.0', ':colordialoglib'

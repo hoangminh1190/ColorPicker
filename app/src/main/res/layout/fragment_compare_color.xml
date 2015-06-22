@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+    <View
+        android:id="@+id/centerShim"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"/>
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/centerShim"
+        android:layout_toStartOf="@+id/centerShim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="7">
+
+        <TextView
+            android:id="@+id/hex"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/rgb"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/hsv"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/hsl"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/cmyk"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/lab"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/xyz"
+            style="@style/ColorCompareTextView" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll2"
+        android:layout_toRightOf="@+id/centerShim"
+        android:layout_toEndOf="@+id/centerShim"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="7">
+
+        <TextView
+            android:id="@+id/hex1"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/rgb1"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/hsv1"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/hsl1"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/cmyk1"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/lab1"
+            style="@style/ColorCompareTextView" />
+
+        <TextView
+            android:id="@+id/xyz1"
+            style="@style/ColorCompareTextView" />
+    </LinearLayout>
+    <com.rey.material.widget.SnackBar
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/snackbar"
+        android:visibility="invisible"
+        android:layout_alignParentBottom="true"
+       />
+
+</RelativeLayout>

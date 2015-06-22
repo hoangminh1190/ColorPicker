@@ -1,0 +1,31 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/action_bookmark_list"
+        android:orderInCategory="101"
+        android:title="@string/action_bookmark_list"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_popular_color"
+        android:orderInCategory="102"
+        android:title="@string/action_popular_color"
+        app:showAsAction="never" />
+<!--    <item
+        android:id="@+id/action_dialog_color"
+        android:orderInCategory="103"
+        android:title="@string/recent_color"
+        app:showAsAction="never" />-->
+    <item
+        android:id="@+id/action_convert"
+        android:orderInCategory="103"
+        android:title="@string/action_convert"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_compare"
+        android:orderInCategory="104"
+        android:title="@string/action_compare"
+        app:showAsAction="never" />
+</menu>

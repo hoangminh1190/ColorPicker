@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="9">
+
+    <View
+        android:id="@+id/detail_color"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2" />
+
+    <TextView
+        android:id="@+id/tv_hex"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_rgb"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_hsv"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_hsl"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_cmyk"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_lab"
+        style="@style/ColorDetailTextView" />
+
+    <TextView
+        android:id="@+id/tv_xyz"
+        style="@style/ColorDetailTextView" />
+
+    <com.rey.material.widget.SnackBar
+        android:id="@+id/snackbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:visibility="invisible"
+        >
+
+    </com.rey.material.widget.SnackBar>
+
+</LinearLayout>

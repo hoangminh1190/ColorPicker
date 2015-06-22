@@ -26,7 +26,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_PICKUP = 2;
-    Button btn_take_photo, btn_load_photo, btn_live_picker;
+    Button btn_take_photo, btn_load_photo, btn_live_picker, btn_create_palette;
     SnackBar mSnackBar;
     Context mContext;
     String uri;
@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_load_photo.setOnClickListener(this);
         btn_live_picker = (Button) findViewById(R.id.btn_live_picker);
         btn_live_picker.setOnClickListener(this);
+        btn_create_palette = (Button) findViewById(R.id.btn_create_palette);
+        btn_create_palette.setOnClickListener(this);
         mSnackBar = (SnackBar) findViewById(R.id.snackbar);
     }
     @Override
@@ -97,7 +99,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intentColorPickerActivity = new Intent(this, LiveColorPickerActivity.class);
                 startActivity(intentColorPickerActivity);
                 break;
-
+            case R.id.btn_create_palette:
+                intent = new Intent(this, CreatePaletteActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 

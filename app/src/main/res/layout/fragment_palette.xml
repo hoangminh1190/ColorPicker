@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <com.rey.material.widget.Spinner
+        style="@style/Material.Widget.Spinner.Light"
+        android:id="@+id/spinner_number_colors"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:minWidth="128dp"
+        app:rd_style="@style/Material.Drawable.Ripple.Wave.Light"
+        app:rd_enable="true"
+        app:spn_labelEnable="true"
+        app:spn_label="Number of colors"
+        app:spn_arrowSwitchMode="true"
+        app:spn_arrowAnimDuration="@android:integer/config_shortAnimTime"
+        app:spn_arrowInterpolator="@android:anim/decelerate_interpolator"/>
+
+    <com.rey.material.widget.CheckBox
+        style="@style/CheckBoxDrawable"
+        android:id="@+id/cb_is_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Horizontal alignment"
+        android:textSize="14sp"
+        android:checked="true"
+        android:gravity="center_vertical"/>
+
+
+</LinearLayout>
