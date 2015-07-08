@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.m2team.colorpicker.utils.Applog;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.m2team.colorpicker.utils.Constant;
 import com.m2team.colorpicker.R;
 import com.m2team.colorpicker.utils.Utils;
-import com.rey.material.widget.SnackBar;
 
 import java.util.ArrayList;
 
@@ -22,19 +22,16 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class BookmarkActivityFragment extends Fragment implements IOnDataChangeListener {
-    ListAdapter adapter;
-    SnackBar snackbar;
-    ListView listView;
-    ArrayList<String> bookmarks;
-    static Context context;
+    private ListAdapter adapter;
+    private ListView listView;
+    private ArrayList<String> bookmarks;
+    private static Context context;
 
     public BookmarkActivityFragment() {
     }
 
     public static BookmarkActivityFragment newInstance() {
-        BookmarkActivityFragment fragment = new BookmarkActivityFragment();
-        Applog.e("newInstance");
-        return fragment;
+        return new BookmarkActivityFragment();
     }
 
     @Override
@@ -42,15 +39,20 @@ public class BookmarkActivityFragment extends Fragment implements IOnDataChangeL
                              Bundle savedInstanceState) {
         if (context == null) context = getActivity();
         View view = inflater.inflate(R.layout.fragment_bookmark, container, false);
-        snackbar = (SnackBar) view.findViewById(R.id.snackbar);
         listView = (ListView) view.findViewById(R.id.list_bookmark_color);
+        AdView mAdView = (AdView) view.findViewById(R.id.adView);
+        AdRequest.Builder builder = new AdRequest.Builder();
+        builder.addTestDevice(getString(R.string.test_device_id_n910f));
+        builder.addTestDevice(getString(R.string.test_device_id_htc));
+        AdRequest adRequest = builder.build();
+        mAdView.loadAd(adRequest);
+
         bookmarks = new ArrayList<>(Utils.getSharedPrefStringSetValue(context, Constant.COLOR_BOOKMARK_LIST));
-        adapter = new ListAdapter(context, bookmarks, snackbar);
+        adapter = new ListAdapter(context, bookmarks);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Applog.e("OnItemClickListener");
                 ColorDetailDialogFragment colorDetailDialogFragment = new ColorDetailDialogFragment();
                 Bundle bundle = new Bundle();
                 String hex = bookmarks.get(position);
@@ -63,7 +65,6 @@ public class BookmarkActivityFragment extends Fragment implements IOnDataChangeL
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Applog.e("onItemLongClick");
                 LongPressDialogFragment fragment = LongPressDialogFragment.newInstance(context);
                 Bundle bundle = new Bundle();
                 bundle.putString("value", bookmarks.get(position));
@@ -80,8 +81,8 @@ public class BookmarkActivityFragment extends Fragment implements IOnDataChangeL
     @Override
     public void onDataChangeListener() {
         if (context != null && listView != null) {
-            bookmarks = new ArrayList<>(Utils.getSharedPrefStringSetValue(context, Constant.COLOR_BOOKMARK_LIST));
-            adapter = new ListAdapter(context, bookmarks, snackbar);
+            bookmarks = Utils.getSharedPrefStringSetValue(context, Constant.COLOR_BOOKMARK_LIST);
+            adapter = new ListAdapter(context, bookmarks);
             listView.setAdapter(adapter);
         }
     }

@@ -20,27 +20,27 @@ public class CameraColorPickerPreview extends TextureView implements TextureView
     /**
      * The size of the pointer (in PIXELS).
      */
-    protected static final int POINTER_RADIUS = 5;
+    private static final int POINTER_RADIUS = 5;
 
     /**
      * The {@link Camera} used for getting a preview frame.
      */
-    protected Camera mCamera;
+    private final Camera mCamera;
 
     /**
      * The {@link Camera.Size} of the preview.
      */
-    protected Camera.Size mPreviewSize;
+    private final Camera.Size mPreviewSize;
 
     /**
      * An array of 3 integers representing the color being selected.
      */
-    protected int[] mSelectedColor;
+    private final int[] mSelectedColor;
 
     /**
      * An {@link CameraColorPickerPreview.OnColorSelectedListener} that will be called each time a new color is being selected.
      */
-    protected OnColorSelectedListener mOnColorSelectedListener;
+    private OnColorSelectedListener mOnColorSelectedListener;
 
     public CameraColorPickerPreview(Context context, Camera camera) {
         super(context);
@@ -109,7 +109,7 @@ public class CameraColorPickerPreview extends TextureView implements TextureView
         }
     }
 
-    protected void addColorFromYUV420(byte[] data, int[] averageColor, int count, int x, int y, int width, int height) {
+    private void addColorFromYUV420(byte[] data, int[] averageColor, int count, int x, int y, int width, int height) {
         // The code converting YUV420 to rgb format is highly inspired from this post http://stackoverflow.com/a/10125048
         final int size = width * height;
         final int Y = data[y * width + x] & 0xff;

@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.aidangrabe.materialcolorpicker.ColorPickerDialogFragment;
+import com.m2team.colorpicker.PaletteBackgroundActivity;
 import com.m2team.colorpicker.R;
 import com.m2team.colorpicker.utils.Constant;
 import com.m2team.colorpicker.utils.Utils;
@@ -27,17 +28,15 @@ import com.rey.material.widget.Spinner;
  * A placeholder fragment containing a simple view.
  */
 public class PaletteBackgroundActivityFragment extends Fragment implements Spinner.OnItemClickListener {
-    LinearLayout parentView;
-    int defaultColor = Color.WHITE;
-    EditText tvPercent;
-    View colorView;
+    private LinearLayout parentView;
+    private EditText tvPercent;
+    private View colorView;
 
     public PaletteBackgroundActivityFragment() {
     }
 
     public static PaletteBackgroundActivityFragment newInstance() {
-        PaletteBackgroundActivityFragment fragment = new PaletteBackgroundActivityFragment();
-        return fragment;
+        return new PaletteBackgroundActivityFragment();
     }
 
     @Override
@@ -94,6 +93,7 @@ public class PaletteBackgroundActivityFragment extends Fragment implements Spinn
                 rowLayout.setTag(i);
                 // create the colours within the rows
                 colorView = new View(getActivity());
+                int defaultColor = Color.WHITE;
                 colorView.setBackgroundColor(defaultColor);
                 colorView.setLayoutParams(colorParams);
                 colorView.setOnClickListener(new View.OnClickListener() {

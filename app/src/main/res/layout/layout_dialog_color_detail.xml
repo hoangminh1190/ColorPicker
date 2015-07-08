@@ -39,17 +39,36 @@
         android:id="@+id/tv_xyz"
         style="@style/ColorDetailTextView" />
 
-    <com.rey.material.widget.Button
-        android:id="@+id/btn_close"
-        style="@style/FlatWaveButtonRippleStyle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="CLOSE"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
+        android:orientation="horizontal"
+        android:weightSum="2">
 
+        <com.rey.material.widget.Button
+            android:id="@+id/btn_share"
+            style="@style/FlatWaveButtonRippleStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="SHARE"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+            android:textColor="#FF000000" />
+
+        <com.rey.material.widget.Button
+            android:id="@+id/btn_close"
+            style="@style/FlatWaveButtonRippleStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="CLOSE"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+            android:textColor="#FF000000" />
+    </LinearLayout>
 
 </LinearLayout>

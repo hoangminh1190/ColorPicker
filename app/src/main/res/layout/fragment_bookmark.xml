@@ -1,22 +1,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/list_bookmark_color"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
         >
 
     </ListView>
 
-    <com.rey.material.widget.SnackBar
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/snackbar"
-        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        ></com.rey.material.widget.SnackBar>
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_bottom_bookmark_unit_id"/>
 
 </RelativeLayout>

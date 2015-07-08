@@ -22,10 +22,13 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.1.0'
+    compile 'com.google.android.gms:play-services-ads:7.5.0'
     //compile(name:'android-material-design-colors-2.0.0', ext: 'aar')
     compile project(':imageviewlibrary')
     compile project(':lib')
     compile project(':android-material-design-colors-2.0.0')
     compile project(':colordialoglib')
     compile 'com.android.support:palette-v7:22.2.0'
+    compile project(':licenselib')
+    compile files('libs/universal-image-loader-1.9.4.jar')
 }

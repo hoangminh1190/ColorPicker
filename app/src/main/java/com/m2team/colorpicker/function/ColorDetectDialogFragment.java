@@ -23,13 +23,10 @@ import com.m2team.colorpicker.utils.ColorSpaceConverter;
 import com.m2team.colorpicker.utils.Constant;
 import com.m2team.colorpicker.utils.Utils;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ColorDetectDialogFragment extends DialogFragment implements View.OnClickListener {
 
     private static final int CIRCLES_PER_ROW = 5;
-    private static final int NUM_ROWS = 10;
-    private List<ColorCircleView> mColorViews;
 
     public ColorDetectDialogFragment() {
     }
@@ -39,10 +36,15 @@ public class ColorDetectDialogFragment extends DialogFragment implements View.On
 
         LinearLayout view = (LinearLayout) inflater.inflate(com.aidangrabe.materialcolorpicker.R.layout.color_palette, container, false);
 
-        mColorViews = new ArrayList<>();
-
+        Bundle bundle = getArguments();
+        ArrayList<Integer> swatches = new ArrayList<>();
+        if (bundle != null) {
+            swatches = bundle.getIntegerArrayList("detectColors");
+        }
+        double rows = Math.ceil(swatches.size() / CIRCLES_PER_ROW);
+        int index = 0;
         // the size of the color views
-        int size = (int) dp2px(48);
+        int size = (int) dp2px();
         LinearLayout.LayoutParams colorParams = new LinearLayout.LayoutParams(size, size);
         colorParams.setMargins(5, 5, 5, 5);
 
@@ -50,7 +52,8 @@ public class ColorDetectDialogFragment extends DialogFragment implements View.On
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
         // create the rows
-        for (int i = 0; i < NUM_ROWS; i++) {
+        for (int i = 0; i < rows; i++) {
+            if (index == swatches.size()) break;
             LinearLayout rowLayout = new LinearLayout(getActivity());
             rowLayout.setLayoutParams(rowParams);
             rowLayout.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -60,39 +63,15 @@ public class ColorDetectDialogFragment extends DialogFragment implements View.On
             for (int j = 0; j < CIRCLES_PER_ROW; j++) {
                 ColorCircleView colorView = new ColorCircleView(getActivity());
                 colorView.setLayoutParams(colorParams);
+                colorView.setColor(swatches.get(index));
+                colorView.setVisibility(View.VISIBLE);
                 colorView.setOnClickListener(this);
                 rowLayout.addView(colorView);
-                mColorViews.add(colorView);
+                index++;
             }
             view.addView(rowLayout);
         }
-
-        setColors();
-
         return view;
-
-    }
-
-    private void setColors() {
-        Bundle bundle = getArguments();
-        ArrayList<Integer> swatches = new ArrayList<>();
-        if (bundle != null) {
-            swatches = bundle.getIntegerArrayList("detectColors");
-        }
-        int i = 0;
-        // change the color of the views
-        for (Integer swatch : swatches) {
-            ColorCircleView colorView = mColorViews.get(i);
-            colorView.setColor(swatch);
-            colorView.setVisibility(View.VISIBLE);
-            i++;
-        }
-
-        // hide any extra views
-        for (int j = i; j < mColorViews.size(); j++) {
-            mColorViews.get(j).setVisibility(View.GONE);
-        }
-
     }
 
 
@@ -105,14 +84,14 @@ public class ColorDetectDialogFragment extends DialogFragment implements View.On
         View view = dialog.getWindow().getDecorView();
 
         if (view != null) {
-            addRevealAnimationToView(view, 0, 0);
+            addRevealAnimationToView(view);
         }
 
         return dialog;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void addRevealAnimationToView(View view, final int centerX, final int centerY) {
+    private void addRevealAnimationToView(View view) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             // if the dialog is null, we are showing the dialog
             // if the dialog is not null, we should dismiss it
@@ -131,16 +110,16 @@ public class ColorDetectDialogFragment extends DialogFragment implements View.On
                 endRadius = v.getWidth();
 
                 v.removeOnLayoutChangeListener(this);
-                Animator reveal = ViewAnimationUtils.createCircularReveal(v, centerX, centerY, startRadius, endRadius);
+                Animator reveal = ViewAnimationUtils.createCircularReveal(v, 0, 0, startRadius, endRadius);
                 reveal.setDuration(300);
                 reveal.start();
             }
         });
     }
 
-    private float dp2px(float dp) {
+    private float dp2px() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics);
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) 48, displayMetrics);
     }
 
     @Override

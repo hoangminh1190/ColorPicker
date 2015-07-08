@@ -11,21 +11,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.m2team.colorpicker.utils.Constant;
 import com.m2team.colorpicker.R;
-import com.m2team.colorpicker.utils.Utils;
-import com.rey.material.widget.SnackBar;
 
 
-public class ListAdapter extends BaseAdapter {
-    Context context;
-    ArrayList<String> lstItem = new ArrayList<>();
-    SnackBar snackBar;
+class ListAdapter extends BaseAdapter {
+    private final Context context;
+    private ArrayList<String> lstItem = new ArrayList<>();
 
-    public ListAdapter(Context c, ArrayList<String> lstItem, SnackBar snackbar) {
+    public ListAdapter(Context c, ArrayList<String> lstItem) {
         context = c;
         this.lstItem = lstItem;
-        this.snackBar = snackbar;
     }
 
     @Override

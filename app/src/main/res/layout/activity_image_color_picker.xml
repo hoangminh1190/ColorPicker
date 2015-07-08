@@ -1,21 +1,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white_100">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-            android:id="@+id/img_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/white"
-            >
+            android:background="@color/colorPrimary">
 
             <View
                 android:id="@+id/bg_color"
@@ -23,32 +20,89 @@
                 android:layout_height="50dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginRight="4dp"
-                />
+                android:layout_marginRight="4dp" />
 
             <TextView
                 android:id="@+id/txt_color"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/bg_color"
-                android:textSize="14sp"
                 android:gravity="center_vertical"
-                android:textColor="@color/primary_dark_material_dark"
+                android:maxLines="3"
+                android:singleLine="false"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/txt_lock_zoom"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_toLeftOf="@+id/switches_sw1"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:text="Lock focus"
+                android:textAllCaps="true"
+                android:textSize="12sp" />
+
+            <com.rey.material.widget.Switch
+                style="@style/Material.Widget.Switch"
+                android:id="@+id/switches_sw1"
+                android:layout_width="50dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:checked="false"
                 />
 
 
         </RelativeLayout>
 
-    </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+
+            <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+                android:id="@+id/img_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:background="@null" />
+
+            <com.rey.material.widget.ProgressView
+                android:id="@+id/progress"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                ads:pv_autostart="false"
+                ads:pv_circular="true"
+                ads:pv_progressMode="indeterminate"
+                ads:pv_progressStyle="@style/ColorsCircularProgressDrawableStyle" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_bottom_main_image_picker_unit_id" />
 
     <com.rey.material.widget.SnackBar
-        style="@style/SnackBarSingleLine"
         android:id="@+id/snackbar"
+        style="@style/SnackBarMultiLine"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone" />
+        android:visibility="invisible"
+        ads:sb_maxLines="3" />
 
 
 </RelativeLayout>

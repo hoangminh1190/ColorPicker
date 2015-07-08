@@ -20,6 +20,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -28,7 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.m2team.colorpicker.R;
+import com.google.gson.Gson;
 import com.rey.material.widget.SnackBar;
 
 import java.io.File;
@@ -45,7 +46,7 @@ public class Utils {
     public static final String ROBOTO_LIGHT = "RobotoCondensed-Light.ttf";
     public static final String ROBOTO_BOLD = "RobotoCondensed-Bold.ttf";
     public static final String ROBOTO_ITALIC = "RobotoCondensed-Italic.ttf";
-    public static final String FONT_PATH = "fonts/";
+    private static final String FONT_PATH = "fonts/";
 
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
@@ -109,6 +110,9 @@ public class Utils {
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            // Return the remote address
+            if (isGooglePhotosUri(uri))
+                return uri.getLastPathSegment();
             return getDataColumn(context, uri, null, null);
         }
         // File
@@ -129,8 +133,8 @@ public class Utils {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
+    private static String getDataColumn(Context context, Uri uri, String selection,
+                                        String[] selectionArgs) {
         final String column = "_data";
         final String[] projection = {
                 column
@@ -145,12 +149,20 @@ public class Utils {
         return null;
     }
 
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is Google Photos.
+     */
+    private static boolean isGooglePhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
 
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
-    public static boolean isExternalStorageDocument(Uri uri) {
+    private static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
@@ -158,7 +170,7 @@ public class Utils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
-    public static boolean isDownloadsDocument(Uri uri) {
+    private static boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
@@ -166,7 +178,7 @@ public class Utils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
-    public static boolean isMediaDocument(Uri uri) {
+    private static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
@@ -193,31 +205,16 @@ public class Utils {
         else if (value instanceof String)
             editor.putString(key, value.toString());
         else if (value instanceof Boolean) {
-            editor.putBoolean(key, ((Boolean) value).booleanValue());
+            editor.putBoolean(key, (Boolean) value);
         }
-        editor.commit();
-    }
-
-    public static void putSharedPrefStringSetValue(Context context, String key, String values) {
-        SharedPreferences pref = context.getSharedPreferences(Constant.PREF_FILE_NAME, Context.MODE_MULTI_PROCESS);
-        Set<String> set = pref.getStringSet(key, new HashSet<String>());
-        if (set == null) set = new HashSet<>();
-        set.add(values);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putStringSet(key, set);
-        editor.commit();
+        editor.apply();
     }
 
     public static void clearStringSet(Context context, String key) {
         SharedPreferences pref = context.getSharedPreferences(Constant.PREF_FILE_NAME, Context.MODE_MULTI_PROCESS);
         SharedPreferences.Editor editor = pref.edit();
         editor.remove(key);
-        editor.commit();
-    }
-
-    public static Set<String> getSharedPrefStringSetValue(Context context, String key) {
-        SharedPreferences pref = context.getSharedPreferences(Constant.PREF_FILE_NAME, Context.MODE_MULTI_PROCESS);
-        return pref.getStringSet(key, new HashSet<String>());
+        editor.apply();
     }
 
     public static float dp2px(Context context, float dp) {
@@ -225,26 +222,20 @@ public class Utils {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics);
     }
 
-    public static File createImageFile(SnackBar snackBar, String fileName) throws IOException {
+    public static File createImageFile(String fileName) throws IOException {
         // Create an image file name
-        File dir = new File(Environment.getExternalStorageDirectory() + "/CP/");
+        File dir = new File(Environment.getExternalStorageDirectory() + "/" + Constant.FOLDER_NAME + "/");
         if (!dir.exists()) {
-            dir.mkdir();
+            boolean mkdir = dir.mkdir();
+            if (!mkdir) return null;
         }
         //File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            File image = File.createTempFile(
-                    fileName,  /* prefix */
-                    ".jpg",         /* suffix */
-                    dir      /* directory */
-            );
-            return image;
-        } else {
-            if (snackBar != null)
-                snackBar.applyStyle(R.style.SnackBarSingleLine)
-                        .text("Cannot create taken photo on your device storage")
-                        .duration(2000)
-                        .show();
+            boolean result;
+            File f = new File(dir, fileName + ".jpg");
+            result =  f.createNewFile();
+            if (result) return f;
+            else return File.createTempFile(fileName, ".jpg", dir);
         }
         return null;
     }
@@ -269,9 +260,9 @@ public class Utils {
 
     public static void showMessage(SnackBar snackBar, String text) {
         if (snackBar != null)
-            snackBar.applyStyle(R.style.SnackBarSingleLine)
+            snackBar
                     .text(text)
-                    .duration(1500).actionText("")
+                    .duration(2000).actionText("")
                     .show();
     }
 
@@ -324,7 +315,7 @@ public class Utils {
         return "";
     }
 
-    public static String getFullInfoColor(String hexColor, String rgb, String hsv, String hsl, String cmyk, String lab, String xyz) {
+    private static String getFullInfoColor(String hexColor, String rgb, String hsv, String hsl, String cmyk, String lab, String xyz) {
         return hexColor + Constant.VAR_TOKEN + rgb + Constant.VAR_TOKEN + hsv + Constant.VAR_TOKEN
                 + hsl + Constant.VAR_TOKEN + cmyk + Constant.VAR_TOKEN
                 + lab + Constant.VAR_TOKEN + xyz;
@@ -341,9 +332,9 @@ public class Utils {
         double[] xyz = converter.RGBtoXYZ(new int[]{Color.red(pixel), Color.green(pixel), Color.blue(pixel)});
 
         String srgb = Color.red(pixel) + Constant.DOLLAR_TOKEN + Color.green(pixel) + Constant.DOLLAR_TOKEN + Color.blue(pixel);
-        String shsv = Utils.round(hsv[0], 0)+ Constant.DOLLAR_TOKEN + Utils.round(hsv[1], 0) * 100+ Constant.DOLLAR_TOKEN + Utils.round(hsv[2], 0) * 100;
+        String shsv = Utils.round(hsv[0], 0) + Constant.DOLLAR_TOKEN + Utils.round(hsv[1], 2) * 100 + Constant.DOLLAR_TOKEN + Utils.round(hsv[2], 2) * 100;
         String shsl = hsl[0] + Constant.DOLLAR_TOKEN + hsl[1] + Constant.DOLLAR_TOKEN + hsl[2];
-        String scmyk = cmyk[0]  + Constant.DOLLAR_TOKEN + cmyk[1] + Constant.DOLLAR_TOKEN + cmyk[2] + Constant.DOLLAR_TOKEN + cmyk[3];
+        String scmyk = cmyk[0] + Constant.DOLLAR_TOKEN + cmyk[1] + Constant.DOLLAR_TOKEN + cmyk[2] + Constant.DOLLAR_TOKEN + cmyk[3];
         String slab = lab[0] + Constant.DOLLAR_TOKEN + lab[1] + Constant.DOLLAR_TOKEN + lab[2];
         String sxyz = xyz[0] + Constant.DOLLAR_TOKEN + xyz[1] + Constant.DOLLAR_TOKEN + xyz[2];
         return getFullInfoColor(hex, srgb, shsv, shsl, scmyk, slab, sxyz);
@@ -394,13 +385,13 @@ public class Utils {
         return (float) tmp / factor;
     }
 
-    public static String roundZero(String s) {
+    private static String roundZero(String s) {
         if (s.contains("."))
             return s.substring(0, s.indexOf("."));
         return s;
     }
 
-    public static String roundZero(float value) {
+    private static String roundZero(float value) {
         String s = String.valueOf(value);
         if (s.contains("."))
             return s.substring(0, s.indexOf("."));
@@ -409,13 +400,13 @@ public class Utils {
 
     public static String setStyleHSV_HSL(float[] hsl) {
         return Utils.roundZero(hsl[0]) + Constant.degree + Constant.SPACE_TOKEN
-                + Utils.roundZero(Utils.round(hsl[1], 2))   +"%"
+                + Utils.roundZero(Utils.round(hsl[1], 2)) + "%"
                 + Constant.SPACE_TOKEN
-                + Utils.roundZero(Utils.round(hsl[2],2)) + "%";
+                + Utils.roundZero(Utils.round(hsl[2], 2)) + "%";
     }
 
     public static String setStyleHSV_HSL(String[] hsl) {
-        return Utils.roundZero(hsl[0]) + Constant.degree +Constant.SPACE_TOKEN
+        return Utils.roundZero(hsl[0]) + Constant.degree + Constant.SPACE_TOKEN
                 + Utils.roundZero(Utils.round(Float.parseFloat(hsl[1]), 2)) + "%"
                 + Constant.SPACE_TOKEN
                 + Utils.roundZero(Utils.round(Float.parseFloat(hsl[2]), 2)) + "%";
@@ -424,30 +415,34 @@ public class Utils {
     public static String setStyleCMYK(float[] cmyk) {
         return Utils.roundZero(cmyk[0]) + "%" + Constant.SPACE_TOKEN
                 + Utils.roundZero(cmyk[1]) + "%" + Constant.SPACE_TOKEN
-                + Utils.roundZero(cmyk[2]) + "%"+ Constant.SPACE_TOKEN
+                + Utils.roundZero(cmyk[2]) + "%" + Constant.SPACE_TOKEN
                 + Utils.roundZero(cmyk[3]) + "%";
     }
+
     public static String setStyleCMYK(String[] cmyk) {
-        return Utils.roundZero(cmyk[0]) + "%"+ Constant.SPACE_TOKEN
-                + Utils.roundZero(cmyk[1]) + "%"+ Constant.SPACE_TOKEN
-                + Utils.roundZero(cmyk[2]) + "%"+ Constant.SPACE_TOKEN
+        return Utils.roundZero(cmyk[0]) + "%" + Constant.SPACE_TOKEN
+                + Utils.roundZero(cmyk[1]) + "%" + Constant.SPACE_TOKEN
+                + Utils.roundZero(cmyk[2]) + "%" + Constant.SPACE_TOKEN
                 + Utils.roundZero(cmyk[3]) + "%";
     }
 
     public static String setStyleLab_XYZ(String[] lab) {
         return lab[0] + Constant.SPACE_TOKEN + lab[1] + Constant.SPACE_TOKEN + lab[2];
     }
+
     public static String setStyleLab_XYZ(double[] lab) {
         return lab[0] + Constant.SPACE_TOKEN + lab[1] + Constant.SPACE_TOKEN + lab[2];
     }
+
     public static String setStyleRGB(String[] rgb) {
         return rgb[0] + Constant.SPACE_TOKEN + rgb[1] + Constant.SPACE_TOKEN + rgb[2];
     }
+
     public static String setStyleRGB(int[] rgb) {
         return rgb[0] + Constant.SPACE_TOKEN + rgb[1] + Constant.SPACE_TOKEN + rgb[2];
     }
 
-    public static void setFont(final Context context, final View v, String font) {
+    private static void setFont(final Context context, final View v, String font) {
         try {
             if (v instanceof ViewGroup) {
                 ViewGroup vg = (ViewGroup) v;
@@ -455,14 +450,14 @@ public class Utils {
                     View child = vg.getChildAt(i);
                     setFont(context, child, font);
                 }
-            } else if (v instanceof TextView ) {
+            } else if (v instanceof TextView) {
                 ((TextView) v).setTypeface(Typeface.createFromAsset(context.getAssets(), FONT_PATH + font));
             }
         } catch (Exception e) {
         }
     }
 
-    public static void setColorDialog(Dialog dialog,String title,int colorId) {
+    public static void setColorDialog(Dialog dialog, String title, int colorId) {
         SpannableString str = new SpannableString(title);
         str.setSpan(new ForegroundColorSpan(colorId), 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         dialog.setTitle(str);
@@ -495,4 +490,31 @@ public class Utils {
             icon.setColorFilter(color);
         }
     }
+
+    // used for store arrayList in json format
+    public static void putSharedPrefStringSetValue(Context context, String key, String value) {
+        ArrayList<String> values = getSharedPrefStringSetValue(context, key);
+        if (values.contains(value.toLowerCase()) || values.contains(value.toUpperCase()))
+            values.remove(value);
+        values.add(0, value);
+        saveToJson(context, key, values);
+    }
+
+    public static void saveToJson(Context context, String key, ArrayList<String> values) {
+        SharedPreferences settings = context.getSharedPreferences(Constant.PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        Gson gson = new Gson();
+        String jsonFavorites = gson.toJson(values);
+        editor.putString(key, jsonFavorites);
+        editor.apply();
+    }
+
+    public static ArrayList<String> getSharedPrefStringSetValue(Context context, String key) {
+        SharedPreferences settings = context.getSharedPreferences(Constant.PREF_FILE_NAME, Context.MODE_PRIVATE);
+        String jsonFavorites = settings.getString(key, "");
+        if (TextUtils.isEmpty(jsonFavorites)) return new ArrayList<>();
+        Gson gson = new Gson();
+        return gson.fromJson(jsonFavorites, ArrayList.class);
+    }
+
 }

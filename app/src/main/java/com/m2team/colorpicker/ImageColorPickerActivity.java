@@ -3,17 +3,12 @@ package com.m2team.colorpicker;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -22,61 +17,170 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.m2team.colorpicker.function.ColorDetailDialogFragment;
 import com.m2team.colorpicker.function.ColorDetectDialogFragment;
 import com.m2team.colorpicker.function.LongPressDialogFragment;
 import com.m2team.colorpicker.utils.Applog;
 import com.m2team.colorpicker.utils.Constant;
 import com.m2team.colorpicker.utils.Utils;
-import com.rey.material.widget.Button;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.rey.material.app.DialogFragment;
+import com.rey.material.app.SimpleDialog;
+import com.rey.material.widget.ProgressView;
 import com.rey.material.widget.SnackBar;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import com.rey.material.widget.Switch;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImageColorPickerActivity extends AppCompatActivity implements View.OnClickListener {
-    Button btn_detect_color;
-    SubsamplingScaleImageView imageView;
-    TextView txtTextView;
-    View bg_color;
-    SnackBar mSnackBar;
-    Context mContext;
-    Bitmap bitmap;
-    String fullInfoColor, favoriteColor;
-    private ShareActionProvider mShareActionProvider;
+    private SubsamplingScaleImageView imageView;
+    private ProgressView progressView;
+    private TextView txtTextView;
+    private View bg_color;
+    private SnackBar mSnackBar;
+    private Switch switches_sw1;
+    private Context mContext;
+    private Bitmap bitmap;
+    private String fullInfoColor;
+    private String favoriteColor;
+    private String sUri;
+    private String path;
+    private int index = 0;
+    private PointF currentPointSelect;
+    private DisplayImageOptions options;
+    private ImageLoader imageLoader;
+
+    private final ImageLoadingListener listener = new ImageLoadingListener() {
+        @Override
+        public void onLoadingStarted(String s, View view) {
+            Applog.d("start loading...");
+            progressView.start();
+        }
+
+        @Override
+        public void onLoadingFailed(String s, View view, FailReason failReason) {
+            Applog.e("Failed");
+            if (index == 0 && !TextUtils.isEmpty(path)) {
+                imageLoader.loadImage(path, options, listener);
+                index++;
+                return;
+            }
+            progressView.stop();
+            showErrorDialog();
+        }
+
+        @Override
+        public void onLoadingComplete(String s, View view, Bitmap bmp) {
+            Applog.d("onLoadingComplete");
+            bitmap = bmp;
+            imageView.setImage(ImageSource.bitmap(bmp));
+            initGesture();
+            progressView.stop();
+        }
+
+        @Override
+        public void onLoadingCancelled(String s, View view) {
+            Applog.d("onLoadingCancelled");
+            showErrorDialog();
+            progressView.stop();
+        }
+    };
+
+    private void init() {
+        mContext = this;
+        progressView = (ProgressView) findViewById(R.id.progress);
+        imageView = (SubsamplingScaleImageView) findViewById(R.id.img_view);
+        txtTextView = (TextView) findViewById(R.id.txt_color);
+        mSnackBar = (SnackBar) findViewById(R.id.snackbar);
+        bg_color = findViewById(R.id.bg_color);
+        TextView textView = (TextView) findViewById(R.id.txt_lock_zoom);
+        switches_sw1 = (Switch) findViewById(R.id.switches_sw1);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switches_sw1.setChecked(!switches_sw1.isChecked());
+            }
+        });
+        imageView.setPanEnabled(!switches_sw1.isChecked());
+        switches_sw1.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(Switch view, boolean checked) {
+                imageView.setPanEnabled(!checked);
+                if (currentPointSelect != null)
+                    imageView.setScaleAndCenter(imageView.getScale(), currentPointSelect);
+            }
+        });
+
+        txtTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v instanceof TextView) {
+                    TextView tv = (TextView) v;
+                    if (!TextUtils.isEmpty(tv.getText())) {
+                        Utils.copyToClipboard(mContext, tv.getText().toString());
+                        Utils.putSharedPrefStringSetValue(mContext, Constant.COLOR_RECENT_LIST, favoriteColor);
+                        Utils.showMessage(mSnackBar, "Copied to clipboard");
+                    }
+
+                }
+            }
+        });
+
+        AdView adView = (AdView) findViewById(R.id.adView);
+        AdRequest.Builder builder = new AdRequest.Builder();
+        builder.addTestDevice(getString(R.string.test_device_id_n910f));
+        builder.addTestDevice(getString(R.string.test_device_id_htc));
+        AdRequest adRequest = builder.build();
+        adView.loadAd(adRequest);
+
+        DisplayImageOptions.Builder displayBuilder = new DisplayImageOptions.Builder();
+        displayBuilder.resetViewBeforeLoading(true)
+                .cacheOnDisk(true)
+                .imageScaleType(ImageScaleType.EXACTLY)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .considerExifParams(true)
+                .displayer(new FadeInBitmapDisplayer(300));
+        options = displayBuilder.build();
+        ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(mContext);
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(configuration);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_color_picker);
-        mContext = this;
-        imageView = (SubsamplingScaleImageView) findViewById(R.id.img_view);
-        txtTextView = (TextView) findViewById(R.id.txt_color);
-        mSnackBar = (SnackBar) findViewById(R.id.snackbar);
-        bg_color = findViewById(R.id.bg_color);
+        init();
+
         Intent intent = getIntent();
         if (intent != null) {
-            Bundle bundle = intent.getExtras();
-            if (bundle != null) {
-                String strUri = "";
-                String path = bundle.getString("uri");
-                Uri uri = (Uri) bundle.get("uri_raw");
-                if (uri != null)
-                    strUri = uri.toString();
-                Applog.d("uri " + path);
-                Applog.d("uri raw " + uri);
-                LoadBitmapAsyncTask loadBitmapAsyncTask = new LoadBitmapAsyncTask();
-                loadBitmapAsyncTask.execute(path, strUri);
-            }
+            path = intent.getStringExtra("path");
+            sUri = intent.getStringExtra("uri");
+            Applog.d("path:" + path);
+            Applog.d("uri:" + sUri);
+            processImagePath();
+        } else {
+            showErrorDialog();
         }
-        initGesture();
         createActionbar();
+    }
+
+    private void processImagePath() {
+        if (!TextUtils.isEmpty(sUri)) {
+            imageLoader.loadImage(sUri, options, listener);
+        } else if (!TextUtils.isEmpty(path)) {
+            imageLoader.loadImage(path, options, listener);
+        }
     }
 
     private void createActionbar() {
@@ -91,9 +195,7 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
             view.findViewById(R.id.btn_bookmark).setOnClickListener(this);
             view.findViewById(R.id.btn_detail).setOnClickListener(this);
             view.findViewById(R.id.btn_color_recent_list).setOnClickListener(this);
-            btn_detect_color = (Button) view.findViewById(R.id.btn_detect_color);
-            btn_detect_color.setOnClickListener(this);
-            btn_detect_color.setEnabled(false);
+            view.findViewById(R.id.btn_detect_color).setOnClickListener(this);
             actionBar.setCustomView(view);
         }
     }
@@ -103,12 +205,14 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 onPixelChange(e);
+                currentPointSelect = imageView.viewToSourceCoord(e.getX(), e.getY());
                 return true;
             }
 
             @Override
             public void onLongPress(MotionEvent e) {
                 onPixelChange(e);
+                currentPointSelect = imageView.viewToSourceCoord(e.getX(), e.getY());
                 LongPressDialogFragment fragment = LongPressDialogFragment.newInstance(mContext);
                 Bundle bundle = new Bundle();
                 bundle.putString("value", favoriteColor);
@@ -119,22 +223,19 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
+                currentPointSelect = imageView.viewToSourceCoord(e.getX(), e.getY());
                 return super.onDoubleTap(e);
-                /*if (imageView.isReady()) {
-                    PointF sCoord = imageView.viewToSourceCoord(e.getX(), e.getY());
-                    Toast.makeText(getApplicationContext(), "Double tap: " + ((int)sCoord.x) + ", " + ((int)sCoord.y), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Double tap: Image not ready", Toast.LENGTH_SHORT).show();
-                }*/
             }
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 onPixelChange(e2);
+                currentPointSelect = imageView.viewToSourceCoord(e2.getX(), e2.getY());
                 return false;
 
             }
         });
+
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -155,13 +256,12 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
                                 + "RGB: " + Utils.setStyleRGB(new int[]{Color.red(pixel), Color.green(pixel), Color.blue(pixel)}) + "\n"
                                 + "HSV: " + Utils.setStyleHSV_HSL(hsv)
                 );
-            //txtTextView.setTextColor(Color.parseColor(hex));
             bg_color.setBackgroundColor(Color.parseColor(hex));
         }
     }
 
     private void onPixelChange(MotionEvent e) {
-        if (imageView.isReady()) {
+        if (imageView.isReady() && bitmap != null) {
             PointF sCoord = imageView.viewToSourceCoord(e.getX(), e.getY());
             if (sCoord.y < 0 || sCoord.x < 0 || sCoord.x > bitmap.getWidth() || sCoord.y > bitmap.getHeight()) {
                 Utils.showMessage(mSnackBar, "You must select pixel inside the photo");
@@ -183,7 +283,7 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
                         @Override
                         public void onGenerated(Palette palette) {
                             List<Palette.Swatch> swatches = palette.getSwatches();
-                            ArrayList<Integer> colorIds = new ArrayList<Integer>();
+                            ArrayList<Integer> colorIds = new ArrayList<>();
                             for (Palette.Swatch swatch : swatches) {
                                 colorIds.add(swatch.getRgb());
                             }
@@ -197,9 +297,13 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
                 }
                 break;
             case R.id.btn_copy:
-                Utils.copyToClipboard(mContext, favoriteColor);
-                Utils.putSharedPrefStringSetValue(this, Constant.COLOR_RECENT_LIST, favoriteColor);
-                Utils.showMessage(mSnackBar, "Copied " + favoriteColor + " to clipboard");
+                if (TextUtils.isEmpty(favoriteColor)) {
+                    Utils.showMessage(mSnackBar, "Select at least one color");
+                } else {
+                    Utils.copyToClipboard(mContext, favoriteColor);
+                    Utils.putSharedPrefStringSetValue(this, Constant.COLOR_RECENT_LIST, favoriteColor);
+                    Utils.showMessage(mSnackBar, "Copied " + favoriteColor + " to clipboard");
+                }
                 break;
             case R.id.btn_bookmark:
                 if (TextUtils.isEmpty(favoriteColor)) {
@@ -265,55 +369,25 @@ public class ImageColorPickerActivity extends AppCompatActivity implements View.
         return super.onOptionsItemSelected(item);
     }
 
-
-    private class LoadBitmapAsyncTask extends AsyncTask<String, Void, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            Bitmap bitmap = BitmapFactory.decodeFile(params[0]);
-            if (bitmap == null) {
-                try {
-                    if (!TextUtils.isEmpty(params[1])) {
-                        InputStream inputStream = getContentResolver().openInputStream(Uri.parse(params[1]));
-                        bitmap = BitmapFactory.decodeStream(inputStream);
-                    }
-                    return bitmap;
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    Applog.e("get stream error");
-                }
-            }
-            return bitmap;
-            //return scaleBitmap(params[0], 1920, 1080);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bmp) {
-            if (bmp != null) {
-                imageView.setImage(ImageSource.bitmap(bmp));
-                bitmap = bmp;
-                btn_detect_color.setEnabled(true);
-            } else {
-                Utils.showMessage(mSnackBar, "Wrong type or error photo. Please select another photo");
-                Applog.e("bitmap null");
-            }
-        }
-
-        private Bitmap scaleBitmap(String uri, int targetW, int targetH) {
-            // Get the dimensions of the bitmap
-            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            bmOptions.inJustDecodeBounds = true;
-            int photoW = bmOptions.outWidth;
-            int photoH = bmOptions.outHeight;
-
-            // Determine how much to scale down the image
-            int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-
-            // Decode the image file into a Bitmap sized to fill the View
-            bmOptions.inJustDecodeBounds = false;
-            bmOptions.inSampleSize = scaleFactor;
-
-            return BitmapFactory.decodeFile(uri, bmOptions);
-        }
+    private void back() {
+        super.onBackPressed();
     }
+
+    private void showErrorDialog() {
+        SimpleDialog.Builder builder = new SimpleDialog.Builder(R.style.SimpleDialogLight) {
+            @Override
+            public void onPositiveActionClicked(DialogFragment fragment) {
+                back();
+                super.onPositiveActionClicked(fragment);
+            }
+        };
+
+        (builder).message("Please check extension, existence of file or check internet connection if file on the cloud")
+                .title("Error loading photo")
+                .positiveAction("OK");
+
+        DialogFragment fragment = DialogFragment.newInstance(builder);
+        fragment.show(getSupportFragmentManager(), null);
+    }
+
 }

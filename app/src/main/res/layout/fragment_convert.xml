@@ -1,115 +1,132 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp"
-    >
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/ll1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/btn_convert"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
 
-
-        <com.rey.material.widget.Spinner
-            android:id="@+id/spinner_left_mode"
-            style="@style/Material.Widget.Spinner.Light"
+        <LinearLayout
+            android:id="@+id/ll1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
-            android:minWidth="128dp"
-            app:rd_enable="true"
-            app:rd_style="@style/Material.Drawable.Ripple.Wave.Light"
-            app:spn_arrowAnimDuration="@android:integer/config_shortAnimTime"
-            app:spn_arrowInterpolator="@android:anim/decelerate_interpolator"
-            app:spn_arrowSwitchMode="true"
-            app:spn_label="Color mode"
-            app:spn_labelEnable="true" />
+            android:orientation="vertical">
 
-        <View
+
+            <com.rey.material.widget.Spinner
+                android:id="@+id/spinner_left_mode"
+                style="@style/Material.Widget.Spinner.Light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:minWidth="128dp"
+                app:rd_enable="true"
+                app:rd_style="@style/Material.Drawable.Ripple.Wave.Light"
+                app:spn_arrowAnimDuration="@android:integer/config_shortAnimTime"
+                app:spn_arrowInterpolator="@android:anim/decelerate_interpolator"
+                app:spn_arrowSwitchMode="true"
+                app:spn_label="Color mode"
+                app:spn_labelEnable="true" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <com.rey.material.widget.EditText
+                android:id="@+id/edt_left"
+                style="@style/Material.Widget.EditText.Light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Color value"
+                android:inputType="text"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:textColor="#FF000000"
+                app:et_dividerErrorColor="#FFFF0000"
+                app:et_inputId="@+id/textfield_et_char_counter_input"
+                app:et_labelTextColor="@drawable/color_label"
+                app:et_supportMaxChars="40"
+                app:et_supportMode="charCounter"
+                app:et_supportTextErrorColor="#FFFF0000" />
+
+
+        </LinearLayout>
+
+        <com.rey.material.widget.Button
+            android:id="@+id/btn_convert"
+            style="@style/FlatWaveButtonRippleStyle"
             android:layout_width="match_parent"
-            android:layout_height="10dp"/>
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="CONVERT"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+            android:textColor="#FF000000" />
 
-        <com.rey.material.widget.EditText
-            style="@style/Material.Widget.EditText.Light"
-            android:id="@+id/edt_left"
+        <LinearLayout
+            android:id="@+id/ll2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="#FF000000"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-            android:inputType="text"
-            android:hint="Fill separate blank with each value"
-            app:et_inputId="@+id/textfield_et_char_counter_input"
-            app:et_labelTextColor="@drawable/color_label"
-            app:et_supportMode="charCounter"
-            app:et_supportMaxChars="40"
-            app:et_supportTextErrorColor="#FFFF0000"
-            app:et_dividerErrorColor="#FFFF0000"/>
+            android:orientation="vertical">
+
+
+            <com.rey.material.widget.Spinner
+                android:id="@+id/spinner_right_mode"
+                style="@style/Material.Widget.Spinner.Light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:minWidth="128dp"
+                app:rd_enable="true"
+                app:rd_style="@style/Material.Drawable.Ripple.Wave.Light"
+                app:spn_arrowAnimDuration="@android:integer/config_shortAnimTime"
+                app:spn_arrowInterpolator="@android:anim/decelerate_interpolator"
+                app:spn_arrowSwitchMode="true"
+                app:spn_label="Color mode"
+                app:spn_labelEnable="true" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <com.rey.material.widget.EditText
+                android:id="@+id/edt_right"
+                style="@style/Material.Widget.EditText.Light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                android:hint="Converted value"
+                android:inputType="text"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:textColor="#FF000000"
+                app:et_inputId="@+id/textfield_et_disable_input"
+                app:et_labelTextColor="@drawable/color_label"
+                app:et_supportMode="none" />
+
+        </LinearLayout>
+
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            app:adSize="BANNER"
+            app:adUnitId="@string/banner_ad_bottom_bookmark_unit_id" />
+
+        <com.rey.material.widget.SnackBar
+            style="@style/SnackBarMultiLine"
+            android:id="@+id/snackbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
 
     </LinearLayout>
-    <com.rey.material.widget.Button
-        android:id="@+id/btn_convert"
-        style="@style/FlatWaveButtonRippleStyle"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
-        android:text="CONVERT"
-        android:gravity="center"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
-    <LinearLayout
-        android:id="@+id/ll2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/btn_convert"
-        android:orientation="vertical">
-
-
-        <com.rey.material.widget.Spinner
-            android:id="@+id/spinner_right_mode"
-            style="@style/Material.Widget.Spinner.Light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
-            android:minWidth="128dp"
-            app:rd_enable="true"
-            app:rd_style="@style/Material.Drawable.Ripple.Wave.Light"
-            app:spn_arrowAnimDuration="@android:integer/config_shortAnimTime"
-            app:spn_arrowInterpolator="@android:anim/decelerate_interpolator"
-            app:spn_arrowSwitchMode="true"
-            app:spn_label="Color mode"
-            app:spn_labelEnable="true" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"/>
-
-        <com.rey.material.widget.EditText
-            style="@style/Material.Widget.EditText.Light"
-            android:id="@+id/edt_right"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="#FF000000"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-            android:inputType="text"
-            android:hint="Converted value"
-            android:enabled="false"
-            app:et_inputId="@+id/textfield_et_disable_input"
-            app:et_labelTextColor="@drawable/color_label"
-            app:et_supportMode="none"/>
-
-    </LinearLayout>
-    <com.rey.material.widget.SnackBar
-        android:id="@+id/snackbar"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:visibility="invisible" />
-</RelativeLayout>
+</ScrollView>

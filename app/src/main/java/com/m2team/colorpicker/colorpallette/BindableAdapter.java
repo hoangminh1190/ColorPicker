@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import java.util.List;
 
-public abstract class BindableAdapter<T> extends ArrayAdapter<T> {
+abstract class BindableAdapter<T> extends ArrayAdapter<T> {
 
     private LayoutInflater inflater;
 
-    public BindableAdapter(Context context, List<T> list){
+    BindableAdapter(Context context, List<T> list){
         super(context, 0, list);
         setup(context);
     }
@@ -32,8 +32,8 @@ public abstract class BindableAdapter<T> extends ArrayAdapter<T> {
         return view;
     }
 
-    public abstract View newView(LayoutInflater inflater, int position, ViewGroup container);
+    protected abstract View newView(LayoutInflater inflater, int position, ViewGroup container);
 
-    public abstract void bindView(T item, int position, View view);
+    protected abstract void bindView(T item, int position, View view);
 
 }

@@ -40,6 +40,7 @@
         </LinearLayout>
 
         <com.rey.material.widget.SnackBar
+            style="@style/SnackBarSingleLine"
             android:id="@+id/main_sn"
             android:layout_width="match_parent"
             android:layout_height="48dp"

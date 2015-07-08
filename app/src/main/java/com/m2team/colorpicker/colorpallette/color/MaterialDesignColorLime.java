@@ -20,12 +20,12 @@ public enum MaterialDesignColorLime implements MaterialDesignColor{
     LIME_A700(R.color.md_lime_a700, R.string.md_lime_a700_color_name, R.string.md_lime_a700_color_code, R.color.md_black),
     ;
 
-    int color;
-    int colorName;
-    int colorCode;
-    int textColor;
+    final int color;
+    final int colorName;
+    final int colorCode;
+    final int textColor;
 
-    private MaterialDesignColorLime(int color, int colorName, int colorCode, int textColor) {
+    MaterialDesignColorLime(int color, int colorName, int colorCode, int textColor) {
         this.color = color;
         this.colorName = colorName;
         this.colorCode = colorCode;

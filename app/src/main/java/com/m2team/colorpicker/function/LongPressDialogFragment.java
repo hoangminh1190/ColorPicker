@@ -22,16 +22,14 @@ import com.m2team.colorpicker.utils.Utils;
 import com.rey.material.app.SimpleDialog;
 import com.rey.material.widget.Button;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.ArrayList;
 
 public class LongPressDialogFragment extends DialogFragment implements View.OnClickListener {
 
-    static Context context;
-    Button tvCopy, tvShare, tvDelete, tvDeleteAll, tv_bookmark, tv_compare;
-    String value;
-    String fragmentId;
-    IOnDataChangeListener listener;
+    private static Context context;
+    private String value;
+    private String fragmentId;
+    private IOnDataChangeListener listener;
 
     public LongPressDialogFragment() {
     }
@@ -81,30 +79,40 @@ public class LongPressDialogFragment extends DialogFragment implements View.OnCl
     }
 
     private void init(View view) {
-        tvCopy = (Button) view.findViewById(R.id.tv_copy);
-        tvShare = (Button) view.findViewById(R.id.tv_share);
-        tvDelete = (Button) view.findViewById(R.id.tv_delete);
-        tvDeleteAll = (Button) view.findViewById(R.id.tv_delete_all);
-        tv_bookmark = (Button) view.findViewById(R.id.tv_bookmark);
-        tv_compare = (Button) view.findViewById(R.id.tv_compare);
+        Button tvCopy = (Button) view.findViewById(R.id.tv_copy);
+        Button tvShare = (Button) view.findViewById(R.id.tv_share);
+        Button tvDelete = (Button) view.findViewById(R.id.tv_delete);
+        Button tvDeleteAll = (Button) view.findViewById(R.id.tv_delete_all);
+        Button tv_bookmark = (Button) view.findViewById(R.id.tv_bookmark);
+        Button tv_compare = (Button) view.findViewById(R.id.tv_compare);
         tvDelete.setOnClickListener(this);
         tvDeleteAll.setOnClickListener(this);
         tvShare.setOnClickListener(this);
         tvCopy.setOnClickListener(this);
         tv_bookmark.setOnClickListener(this);
         tv_compare.setOnClickListener(this);
-        if (fragmentId.equals("main")) {
-            tvDelete.setVisibility(View.GONE);
-            tvDeleteAll.setVisibility(View.GONE);
-            tv_bookmark.setVisibility(View.VISIBLE);
-        } else if (fragmentId.equals("bookmark")) {
-            tvDelete.setVisibility(View.VISIBLE);
-            tvDeleteAll.setVisibility(View.VISIBLE);
-            tv_bookmark.setVisibility(View.GONE);
-        } else if (fragmentId.equals("recent")) {
-            tvDelete.setVisibility(View.VISIBLE);
-            tvDeleteAll.setVisibility(View.VISIBLE);
-            tv_bookmark.setVisibility(View.VISIBLE);
+        String firstColor = Utils.getPrefString(context, Constant.FIRST_COLOR_COMPARE);
+        if (TextUtils.isEmpty(firstColor)) {
+            tv_compare.setText("Choose to compare");
+        } else {
+            tv_compare.setText("Compare with " + firstColor);
+        }
+        switch (fragmentId) {
+            case "main":
+                tvDelete.setVisibility(View.GONE);
+                tvDeleteAll.setVisibility(View.GONE);
+                tv_bookmark.setVisibility(View.VISIBLE);
+                break;
+            case "bookmark":
+                tvDelete.setVisibility(View.VISIBLE);
+                tvDeleteAll.setVisibility(View.VISIBLE);
+                tv_bookmark.setVisibility(View.GONE);
+                break;
+            case "recent":
+                tvDelete.setVisibility(View.VISIBLE);
+                tvDeleteAll.setVisibility(View.VISIBLE);
+                tv_bookmark.setVisibility(View.VISIBLE);
+                break;
         }
     }
 
@@ -114,6 +122,7 @@ public class LongPressDialogFragment extends DialogFragment implements View.OnCl
             case R.id.tv_copy:
                 if (!TextUtils.isEmpty(value)) {
                     Utils.copyToClipboard(context, value);
+                    Utils.putSharedPrefStringSetValue(context, Constant.COLOR_RECENT_LIST, value);
                     Toast.makeText(context, "Copied " + value + " to clipboard", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -138,8 +147,6 @@ public class LongPressDialogFragment extends DialogFragment implements View.OnCl
                     break;
                 } else if (TextUtils.isEmpty(secondColor)) {
                     Utils.putPrefValue(context, Constant.SECOND_COLOR_COMPARE, value);
-                } else {
-                    Utils.putPrefValue(context, Constant.FIRST_COLOR_COMPARE, value);
                 }
                 Intent intent = new Intent(context, MainSettingActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -158,10 +165,6 @@ public class LongPressDialogFragment extends DialogFragment implements View.OnCl
                         super.onPositiveActionClicked(fragment);
                     }
 
-                    @Override
-                    public void onNegativeActionClicked(com.rey.material.app.DialogFragment fragment) {
-                        super.onNegativeActionClicked(fragment);
-                    }
                 };
 
                 builder.title("Do you want to clear all your data?")
@@ -178,8 +181,7 @@ public class LongPressDialogFragment extends DialogFragment implements View.OnCl
     }
 
     private void delete() {
-        Set<String> list = null;
-        boolean remove;
+        ArrayList<String> list = null;
         int index = fragmentId.equals("bookmark") ? 0 : fragmentId.equals("recent") ? 1 : 2;
         if (index == 0) {
             list = Utils.getSharedPrefStringSetValue(context, Constant.COLOR_BOOKMARK_LIST);
@@ -187,15 +189,10 @@ public class LongPressDialogFragment extends DialogFragment implements View.OnCl
             list = Utils.getSharedPrefStringSetValue(context, Constant.COLOR_RECENT_LIST);
         }
         if (list != null && list.size() > 0) {
-            int size = list.size();
-            Iterator<String> iterator = list.iterator();
-            while (iterator.hasNext()) {
-                String next = iterator.next();
-                if (next.equalsIgnoreCase(value)) iterator.remove();
-            }
-            remove = list.size() == (size - 1);
+            boolean remove = list.remove(value);
             if (remove) {
                 Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+                Utils.saveToJson(getActivity(), index == 0 ? Constant.COLOR_BOOKMARK_LIST : Constant.COLOR_RECENT_LIST, list);
                 onDismiss();
             } else {
                 Toast.makeText(context, "Delete fail. Please try again", Toast.LENGTH_SHORT).show();
@@ -210,11 +207,11 @@ public class LongPressDialogFragment extends DialogFragment implements View.OnCl
         int index = fragmentId.equals("bookmark") ? 0 : fragmentId.equals("recent") ? 1 : 2;
         if (index == 0) {
             Utils.clearStringSet(context, Constant.COLOR_BOOKMARK_LIST);
-            Set<String> set = Utils.getSharedPrefStringSetValue(context, Constant.COLOR_BOOKMARK_LIST);
+            ArrayList<String> set = Utils.getSharedPrefStringSetValue(context, Constant.COLOR_BOOKMARK_LIST);
             remove = set == null || set.size() == 0;
         } else if (index == 1) {
             Utils.clearStringSet(context, Constant.COLOR_RECENT_LIST);
-            Set<String> set = Utils.getSharedPrefStringSetValue(context, Constant.COLOR_RECENT_LIST);
+            ArrayList<String> set = Utils.getSharedPrefStringSetValue(context, Constant.COLOR_RECENT_LIST);
             remove = set == null || set.size() == 0;
         }
         if (remove) {

@@ -1,57 +1,155 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/llparent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
 
-    <com.rey.material.widget.Button
-        android:id="@+id/btn_take_photo"
-        style="@style/FlatWaveButtonRippleStyle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="Take a photo"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="2dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:orientation="horizontal">
 
-    <com.rey.material.widget.Button
-        android:id="@+id/btn_load_photo"
-        style="@style/FlatWaveButtonRippleStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_take_photo"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="Load a photo"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
 
-    <com.rey.material.widget.Button
-        android:id="@+id/btn_live_picker"
-        style="@style/FlatWaveButtonRippleStyle"
+        <ImageView
+            style="@style/IconButtonMain"
+            android:src="@drawable/ic_camera_alt_white_24dp"
+            android:background="@color/md_red_400"
+            />
+
+        <com.rey.material.widget.Button
+            android:id="@+id/btn_take_photo"
+            style="@style/ButtonMain"
+            android:text="Take a photo" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_load_photo"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="Live Picker"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
-    <com.rey.material.widget.Button
-        android:id="@+id/btn_create_palette"
-        style="@style/FlatWaveButtonRippleStyle"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="2dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:orientation="horizontal">
+
+        <ImageView
+            style="@style/IconButtonMain"
+            android:src="@drawable/ic_photo_white_24dp"
+            android:background="@color/md_blue_400"
+            />
+
+        <com.rey.material.widget.Button
+            android:id="@+id/btn_load_photo"
+            style="@style/ButtonMain"
+            android:text="Load a photo"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_live_picker"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="Create custom palette"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:textColor="#FF000000" />
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="2dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:orientation="horizontal">
+
+        <ImageView
+            style="@style/IconButtonMain"
+            android:src="@drawable/ic_colorize_white_24dp"
+            android:background="@color/md_green_400"
+            />
+
+        <com.rey.material.widget.Button
+            android:id="@+id/btn_live_picker"
+            style="@style/ButtonMain"
+            android:text="Live Picker" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="2dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:orientation="horizontal">
+
+        <ImageView
+            style="@style/IconButtonMain"
+            android:src="@drawable/ic_texture_white_24dp"
+            android:background="@color/md_orange_400"
+            />
+
+        <com.rey.material.widget.Button
+            android:id="@+id/btn_create_palette"
+            style="@style/ButtonMain"
+            android:text="Create color background" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="2dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:orientation="horizontal">
+
+        <ImageView
+            style="@style/IconButtonMain"
+            android:src="@drawable/ic_list_white_24dp"
+            android:background="@color/md_pink_400"
+            android:id="@+id/icon4"
+            />
+
+        <com.rey.material.widget.Button
+            android:id="@+id/btn_material_color_list"
+            style="@style/ButtonMain"
+            android:text="Material colors" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="2dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:orientation="horizontal">
+
+        <ImageView
+            style="@style/IconButtonMain"
+            android:src="@drawable/ic_swap_horiz_white_24dp"
+            android:background="@color/md_purple_400"
+            android:id="@+id/icon5"
+            />
+
+        <com.rey.material.widget.Button
+            android:id="@+id/btn_convert"
+            style="@style/ButtonMain"
+            android:text="Color mode converter" />
+    </LinearLayout>
 
     <com.rey.material.widget.SnackBar
+        style="@style/SnackBarSingleLine"
         android:id="@+id/snackbar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="50dp"
         android:visibility="gone" />
-</RelativeLayout>
+
+</LinearLayout>

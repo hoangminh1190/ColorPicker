@@ -25,9 +25,7 @@ public class CustomViewPager extends ViewPager{
         return super.canScroll(v, checkV, dx, x, y) || (checkV && customCanScroll(v));
     }
 
-    protected boolean customCanScroll(View v) {
-        if (v instanceof Slider || v instanceof Switch)
-            return true;
-        return false;
+    private boolean customCanScroll(View v) {
+        return v instanceof Slider || v instanceof Switch;
     }
 }

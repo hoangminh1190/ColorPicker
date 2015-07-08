@@ -2,37 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e0e0e0"
+    android:background="@color/colorPrimary"
     android:orientation="horizontal"
     android:weightSum="5">
 
-    <com.rey.material.widget.Button
-        android:id="@+id/btn_detect_color"
-        style="@style/FlatButtonActionBar"
-        android:background="@drawable/ic_done_black_24dp"
 
-        />
-
-    <com.rey.material.widget.Button
+    <com.rey.material.widget.ImageButton
         android:id="@+id/btn_copy"
         style="@style/FlatButtonActionBar"
-        android:background="@drawable/ic_content_copy_black_24dp"
+        android:src="@drawable/ic_content_copy_white_24dp" />
 
-        />
-
-    <com.rey.material.widget.Button
-        android:id="@+id/btn_detail"
-        style="@style/FlatButtonActionBar"
-        android:background="@drawable/ic_info_black_24dp" />
-
-    <com.rey.material.widget.Button
+    <com.rey.material.widget.ImageButton
         android:id="@+id/btn_bookmark"
         style="@style/FlatButtonActionBar"
-        android:background="@drawable/ic_bookmark_black_24dp" />
+        android:src="@drawable/ic_favorite_border_white_24dp" />
 
+    <com.rey.material.widget.ImageButton
+        android:id="@+id/btn_detail"
+        style="@style/FlatButtonActionBar"
+        android:src="@drawable/ic_info_outline_white_24dp" />
 
-    <com.rey.material.widget.Button
+    <com.rey.material.widget.ImageButton
         android:id="@+id/btn_color_recent_list"
         style="@style/FlatButtonActionBar"
-        android:background="@drawable/ic_list_black_24dp" />
+        android:src="@drawable/ic_list_white_24dp" />
+
+    <com.rey.material.widget.ImageButton
+        android:id="@+id/btn_detect_color"
+        style="@style/FlatButtonActionBar"
+        android:src="@drawable/ic_color_lens_white_24dp"
+
+        />
 </LinearLayout>

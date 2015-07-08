@@ -38,9 +38,9 @@ public class ItemDetailAdapter extends BindableAdapter<MaterialDesignColor> {
 
     private class ViewHolder {
 
-        RelativeLayout item;
-        TextView name;
-        TextView code;
+        final RelativeLayout item;
+        final TextView name;
+        final TextView code;
 
         public ViewHolder(View view){
             item = (RelativeLayout)view.findViewById(R.id.item);

@@ -1,35 +1,101 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:layout_margin="8dp"
+    android:background="@color/white"
+    android:padding="8dp">
 
-    <com.rey.material.widget.Spinner
-        style="@style/Material.Widget.Spinner.Light"
-        android:id="@+id/spinner_number_colors"
-        android:layout_marginTop="5dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:minWidth="128dp"
-        app:rd_style="@style/Material.Drawable.Ripple.Wave.Light"
-        app:rd_enable="true"
-        app:spn_labelEnable="true"
-        app:spn_label="Number of colors"
-        app:spn_arrowSwitchMode="true"
-        app:spn_arrowAnimDuration="@android:integer/config_shortAnimTime"
-        app:spn_arrowInterpolator="@android:anim/decelerate_interpolator"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <com.rey.material.widget.CheckBox
-        style="@style/CheckBoxDrawable"
-        android:id="@+id/cb_is_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Horizontal alignment"
-        android:textSize="14sp"
-        android:checked="true"
-        android:gravity="center_vertical"/>
+        <com.rey.material.widget.Spinner
+            android:id="@+id/spinner_number_colors"
+            style="@style/Material.Widget.Spinner.Light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:minWidth="128dp"
+            app:rd_enable="true"
+            app:rd_style="@style/Material.Drawable.Ripple.Wave.Light"
+            app:spn_arrowAnimDuration="@android:integer/config_shortAnimTime"
+            app:spn_arrowInterpolator="@android:anim/decelerate_interpolator"
+            app:spn_arrowSwitchMode="true"
+            app:spn_label="Number of colors"
+            app:spn_labelEnable="true"/>
 
 
-</LinearLayout>
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioHoz"
+                style="@style/RadioButtonDrawable"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:text="Horizontal alignment"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/radioVer"
+                style="@style/RadioButtonDrawable"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:checked="false"
+                android:gravity="center_vertical"
+                android:text="Vertical alignment"
+                android:textSize="14sp" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Percent"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text_material_light"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Color"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text_material_light"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:adSize="BANNER"
+            app:adUnitId="@string/banner_ad_bottom_palette_bg_unit_id" />
+
+    </LinearLayout>
+</ScrollView>

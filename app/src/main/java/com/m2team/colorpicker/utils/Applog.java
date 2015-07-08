@@ -23,14 +23,14 @@ import java.util.logging.Logger;
  */
 public class Applog {
 
-    public static String TAG = "cpk";
+    private static String TAG = "cpk";
 
     //public static boolean DEBUG = Log.isLoggable(TAG, Log.VERBOSE);
-    public static boolean DEBUG = false;
+    private static boolean DEBUG = false;
     private static Applog sInstance;
-    private SimpleDateFormat mFormatter;
-    private Date mDate;
-    private Logger mLogger;
+    private final SimpleDateFormat mFormatter;
+    private final Date mDate;
+    private final Logger mLogger;
     private boolean mFileLogEnabled = false;
 
     private Applog() {
@@ -147,7 +147,7 @@ public class Applog {
         }
     }
 
-    public static void e(Throwable tr, String format, Object... args) {
+    private static void e(Throwable tr, String format, Object... args) {
         Applog log = getInstance();
         String message = log.buildMessage(format, args);
         if (log.mFileLogEnabled && log.mLogger != null) {

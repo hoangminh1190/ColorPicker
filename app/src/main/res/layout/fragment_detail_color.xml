@@ -44,8 +44,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:visibility="invisible"
-        >
+        style="@style/SnackBarSingleLine"
+        />
 
-    </com.rey.material.widget.SnackBar>
 
 </LinearLayout>

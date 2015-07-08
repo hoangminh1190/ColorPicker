@@ -21,26 +21,26 @@ public class ColorSpaceConverter {
     /**
      * reference white in XYZ coordinates
      */
-    public double[] D65 = {95.0429, 100.0, 108.8900};
-    public double[] whitePoint = D65;
+    private final double[] D65 = {95.0429, 100.0, 108.8900};
+    private final double[] whitePoint = D65;
 
     /**
      * reference white in xyY coordinates
      */
-    public double[] chromaD65 = {0.3127, 0.3290, 100.0};
-    public double[] chromaWhitePoint = chromaD65;
+    private final double[] chromaD65 = {0.3127, 0.3290, 100.0};
+    private final double[] chromaWhitePoint = chromaD65;
 
     /**
      * sRGB to XYZ conversion matrix
      */
-    public double[][] M = {{0.4124, 0.3576, 0.1805},
+    private final double[][] M = {{0.4124, 0.3576, 0.1805},
             {0.2126, 0.7152, 0.0722},
             {0.0193, 0.1192, 0.9505}};
 
     /**
      * XYZ to sRGB conversion matrix
      */
-    public double[][] Mi = {{3.2406, -1.5372, -0.4986},
+    private final double[][] Mi = {{3.2406, -1.5372, -0.4986},
             {-0.9689, 1.8758, 0.0415},
             {0.0557, -0.2040, 1.0570}};
 
@@ -143,7 +143,7 @@ public class ColorSpaceConverter {
      * @param b
      * @return XYZ values
      */
-    public double[] LABtoXYZ(double L, double a, double b) {
+    private double[] LABtoXYZ(double L, double a, double b) {
         double[] result = new double[3];
 
         double y = (L + 16.0) / 116.0;
@@ -182,7 +182,7 @@ public class ColorSpaceConverter {
      * @param Lab
      * @return XYZ values
      */
-    public double[] LABtoXYZ(double[] Lab) {
+    private double[] LABtoXYZ(double[] Lab) {
         return LABtoXYZ(Lab[0], Lab[1], Lab[2]);
     }
 
@@ -212,7 +212,7 @@ public class ColorSpaceConverter {
      * @param B
      * @return XYZ in double array.
      */
-    public double[] RGBtoXYZ(int R, int G, int B) {
+    private double[] RGBtoXYZ(int R, int G, int B) {
         double[] result = new double[3];
 
         // convert 0..255 into 0..1
@@ -265,7 +265,7 @@ public class ColorSpaceConverter {
      * @param Y
      * @return XYZ values
      */
-    public double[] xyYtoXYZ(double x, double y, double Y) {
+    private double[] xyYtoXYZ(double x, double y, double Y) {
         double[] result = new double[3];
         if (y == 0) {
             result[0] = 0;
@@ -295,7 +295,7 @@ public class ColorSpaceConverter {
      * @param Z
      * @return Lab values
      */
-    public double[] XYZtoLAB(double X, double Y, double Z) {
+    private double[] XYZtoLAB(double X, double Y, double Z) {
 
         double x = X / whitePoint[0];
         double y = Y / whitePoint[1];
@@ -332,7 +332,7 @@ public class ColorSpaceConverter {
      * @param XYZ
      * @return Lab values
      */
-    public double[] XYZtoLAB(double[] XYZ) {
+    private double[] XYZtoLAB(double[] XYZ) {
         return XYZtoLAB(XYZ[0], XYZ[1], XYZ[2]);
     }
 
@@ -344,7 +344,7 @@ public class ColorSpaceConverter {
      * @param Z
      * @return RGB in int array.
      */
-    public int[] XYZtoRGB(double X, double Y, double Z) {
+    private int[] XYZtoRGB(double X, double Y, double Z) {
         int[] result = new int[3];
 
         double x = X / 100.0;
@@ -391,7 +391,7 @@ public class ColorSpaceConverter {
      * @param XYZ in a double array.
      * @return RGB in int array.
      */
-    public int[] XYZtoRGB(double[] XYZ) {
+    private int[] XYZtoRGB(double[] XYZ) {
         return XYZtoRGB(XYZ[0], XYZ[1], XYZ[2]);
     }
 

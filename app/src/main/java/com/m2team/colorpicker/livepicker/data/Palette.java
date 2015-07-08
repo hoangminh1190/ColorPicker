@@ -28,7 +28,7 @@ public class Palette implements Parcelable {
     /**
      * The {@link ColorItem}s that compose this {@link Palette}.
      */
-    private List<ColorItem> mColorItems;
+    private final List<ColorItem> mColorItems;
 
     public Palette(String name) {
         mId = System.currentTimeMillis();

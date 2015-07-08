@@ -11,30 +11,47 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.m2team.colorpicker.R;
 import com.m2team.colorpicker.utils.Constant;
 import com.m2team.colorpicker.utils.Utils;
 import com.rey.material.widget.SnackBar;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
-
 /**
  * A placeholder fragment containing a simple view.
  */
 public class CompareColorFragment extends Fragment implements View.OnClickListener {
 
-    TextView tvHEX, tvRGB, tvHSV, tvHSL, tvCMYK, tvLAB, tvXYZ;
-    TextView tvHEX1, tvRGB1, tvHSV1, tvHSL1, tvCMYK1, tvLAB1, tvXYZ1;
-    LinearLayout ll1, ll2;
-    SnackBar snackBar;
-    String[] rgb, rgb1, hsv, hsv1, hsl, hsl1, cmyk, cmyk1, lab, lab1, xyz, xyz1;
-    static Context context;
-
-    private static LoadColor loadColor;
+    private TextView tvHEX;
+    private TextView tvRGB;
+    private TextView tvHSV;
+    private TextView tvHSL;
+    private TextView tvCMYK;
+    private TextView tvLAB;
+    private TextView tvXYZ;
+    private TextView tvHEX1;
+    private TextView tvRGB1;
+    private TextView tvHSV1;
+    private TextView tvHSL1;
+    private TextView tvCMYK1;
+    private TextView tvLAB1;
+    private TextView tvXYZ1;
+    private LinearLayout ll1;
+    private LinearLayout ll2;
+    private SnackBar snackBar;
+    private String[] rgb;
+    private String[] rgb1;
+    private String[] hsv;
+    private String[] hsv1;
+    private String[] hsl;
+    private String[] hsl1;
+    private String[] cmyk;
+    private String[] cmyk1;
+    private String[] lab;
+    private String[] lab1;
+    private String[] xyz;
+    private String[] xyz1;
+    private static Context context;
 
     private class LoadColor extends AsyncTask<String, Void, String[]> {
         @Override
@@ -84,8 +101,7 @@ public class CompareColorFragment extends Fragment implements View.OnClickListen
     }
 
     public static CompareColorFragment newInstance() {
-        CompareColorFragment fragment = new CompareColorFragment();
-        return fragment;
+        return new CompareColorFragment();
     }
 
     private void init(View view) {
@@ -151,7 +167,7 @@ public class CompareColorFragment extends Fragment implements View.OnClickListen
             snackBar.setVisibility(View.VISIBLE);
             Utils.showMessage(snackBar, "You must choose one more color to compare");
         } else {
-            loadColor = new LoadColor();
+            LoadColor loadColor = new LoadColor();
             loadColor.execute(firstColor, secondColor);
         }
         return view;

@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.InterstitialAd;
 import com.m2team.colorpicker.colorpallette.ItemDetailActivity;
 import com.m2team.colorpicker.colorpallette.ItemDetailFragment;
 import com.m2team.colorpicker.colorpallette.ItemListFragment;
@@ -45,17 +46,15 @@ import java.util.ArrayList;
 public class MainSettingActivity extends ActionBarActivity implements ItemListFragment.Callbacks, ToolbarManager.OnToolbarGroupChangedListener {
 
     private CustomViewPager vp;
-    private TabPageIndicator tpi;
     private PagerAdapter mPagerAdapter;
     private SnackBar mSnackBar;
 
     private DrawerAdapter mDrawerAdapter;
     private FrameLayout fl_drawer;
-    private ListView lv_drawer;
     private DrawerLayout dl_navigator;
-    private Toolbar mToolbar;
     private ToolbarManager mToolbarManager;
-    private Tab[] mItems = new Tab[]{Tab.BOOKMARK, Tab.RECENT_COLOR, Tab.MATERIAL_COLOR, Tab.CONVERT, Tab.COMPARE};
+    InterstitialAd mInterstitialAd;
+    private final Tab[] mItems = new Tab[]{Tab.BOOKMARK, Tab.RECENT_COLOR, Tab.MATERIAL_COLOR, Tab.CONVERT, Tab.COMPARE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +63,10 @@ public class MainSettingActivity extends ActionBarActivity implements ItemListFr
         setContentView(R.layout.activity_main_setting);
         dl_navigator = (DrawerLayout) findViewById(R.id.main_dl);
         fl_drawer = (FrameLayout) findViewById(R.id.main_fl_drawer);
-        lv_drawer = (ListView) findViewById(R.id.main_lv_drawer);
-        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        ListView lv_drawer = (ListView) findViewById(R.id.main_lv_drawer);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         vp = (CustomViewPager) findViewById(R.id.main_vp);
-        tpi = (TabPageIndicator) findViewById(R.id.main_tpi);
+        TabPageIndicator tpi = (TabPageIndicator) findViewById(R.id.main_tpi);
         mSnackBar = (SnackBar) findViewById(R.id.main_sn);
 
         mToolbarManager = new ToolbarManager(this, mToolbar, 0, R.style.ToolbarRippleStyle, R.anim.abc_fade_in, R.anim.abc_fade_out);
@@ -178,14 +177,19 @@ public class MainSettingActivity extends ActionBarActivity implements ItemListFr
         int currentItem = vp.getCurrentItem();
         if (currentItem == Tab.BOOKMARK.ordinal()) {
             title = Tab.BOOKMARK.name;
+            msg  = getString(R.string.help_bookmark);
         } else if (currentItem == Tab.RECENT_COLOR.ordinal()) {
             title = Tab.RECENT_COLOR.name;
+            msg  = getString(R.string.help_recent);
         } else if (currentItem == Tab.MATERIAL_COLOR.ordinal()) {
             title = Tab.MATERIAL_COLOR.name;
+            msg  = getString(R.string.help_material_colors);
         } else if (currentItem == Tab.COMPARE.ordinal()) {
             title = Tab.COMPARE.name;
+            msg  = getString(R.string.help_compare);
         } else if (currentItem == Tab.CONVERT.ordinal()) {
             title = Tab.CONVERT.name;
+            msg  = getString(R.string.help_convert);
         }
         switch (item.getItemId()) {
             case R.id.action_share:
@@ -203,14 +207,9 @@ public class MainSettingActivity extends ActionBarActivity implements ItemListFr
                 break;
             case R.id.action_help:
                 Dialog.Builder builder = new SimpleDialog.Builder(R.style.SimpleDialogLight) {
-                    @Override
-                    public void onPositiveActionClicked(DialogFragment fragment) {
-                        Toast.makeText(fragment.getDialog().getContext(), "Agreed", Toast.LENGTH_SHORT).show();
-                        super.onPositiveActionClicked(fragment);
-                    }
                 };
 
-                ((SimpleDialog.Builder) builder).message(title)
+                ((SimpleDialog.Builder) builder).message(msg)
                         .title(title)
                         .positiveAction("CLOSE");
                 DialogFragment fragment = DialogFragment.newInstance(builder);
@@ -263,8 +262,8 @@ public class MainSettingActivity extends ActionBarActivity implements ItemListFr
             sActiveField = f;
         }
 
-        Fragment[] mFragments;
-        Tab[] mTabs;
+        final Fragment[] mFragments;
+        final Tab[] mTabs;
 
         public PagerAdapter(FragmentManager fm, Tab[] tabs) {
             super(fm);

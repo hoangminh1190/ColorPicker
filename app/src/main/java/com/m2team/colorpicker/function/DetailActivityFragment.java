@@ -19,11 +19,16 @@ import com.rey.material.widget.SnackBar;
  * A placeholder fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment implements View.OnClickListener {
-    static String detailColor;
-    TextView tvHEX, tvRGB, tvHSV, tvHSL, tvCMYK, tvLAB, tvXYZ;
-    LinearLayout ll1;
-    View viewBG;
-    SnackBar snackBar;
+    private static String detailColor;
+    private TextView tvHEX;
+    private TextView tvRGB;
+    private TextView tvHSV;
+    private TextView tvHSL;
+    private TextView tvCMYK;
+    private TextView tvLAB;
+    private TextView tvXYZ;
+    private View viewBG;
+    private SnackBar snackBar;
 
     public DetailActivityFragment() {
     }
@@ -35,7 +40,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     }
 
     private void init(View view) {
-        ll1 = (LinearLayout) view.findViewById(R.id.ll1);
+        LinearLayout ll1 = (LinearLayout) view.findViewById(R.id.ll1);
         viewBG = view.findViewById(R.id.detail_color);
         tvHEX = (TextView) view.findViewById(R.id.tv_hex);
         tvRGB = (TextView) view.findViewById(R.id.tv_rgb);

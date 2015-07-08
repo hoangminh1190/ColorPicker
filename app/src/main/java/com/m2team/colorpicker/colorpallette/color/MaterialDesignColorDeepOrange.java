@@ -20,12 +20,12 @@ public enum MaterialDesignColorDeepOrange implements MaterialDesignColor{
     DEEP_ORANGE_A700(R.color.md_deep_orange_a700, R.string.md_deep_orange_a700_color_name, R.string.md_deep_orange_a700_color_code, R.color.md_white),
     ;
 
-    int color;
-    int colorName;
-    int colorCode;
-    int textColor;
+    final int color;
+    final int colorName;
+    final int colorCode;
+    final int textColor;
 
-    private MaterialDesignColorDeepOrange(int color, int colorName, int colorCode, int textColor) {
+    MaterialDesignColorDeepOrange(int color, int colorName, int colorCode, int textColor) {
         this.color = color;
         this.colorName = colorName;
         this.colorCode = colorCode;

@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class ColorPalette {
 
-    public static List<ColorGroup> ITEMS = new ArrayList<ColorGroup>();
-    public static Map<ColorGroup, List<MaterialDesignColor>> ITEM_MAP = new HashMap<ColorGroup, List<MaterialDesignColor>>();
+    public static final List<ColorGroup> ITEMS = new ArrayList<>();
+    public static final Map<ColorGroup, List<MaterialDesignColor>> ITEM_MAP = new HashMap<>();
 
     static{
         addItem(
@@ -92,16 +92,16 @@ public class ColorPalette {
         );
     }
 
-    public static void addItem(ColorGroup group, List<MaterialDesignColor> list){
+    private static void addItem(ColorGroup group, List<MaterialDesignColor> list){
         ITEMS.add(group);
         ITEM_MAP.put(group, list);
     }
 
     public static class ColorGroup {
 
-        int color;
-        int colorName;
-        int textColor;
+        final int color;
+        final int colorName;
+        final int textColor;
 
         private ColorGroup(int color, int colorName, int textColor) {
             this.color = color;

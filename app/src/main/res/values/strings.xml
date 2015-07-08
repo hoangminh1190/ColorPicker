@@ -1,19 +1,16 @@
 <resources>
-    <string name="app_name">Sample</string>
+    <string name="app_name">Color Picker Art</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_popular_color">Material design color</string>
     <string name="action_bookmark_list">Bookmark list</string>
     <string name="action_convert">Convert color</string>
     <string name="action_recent_list">Recent colors</string>
     <string name="action_compare">Compare colors</string>
-    <string name="title_activity_palette_background">PaletteBackgroundActivity</string>
     <string name="activity_color_picker_confirm_save_message">Color saved</string>
     <string name="menu_color_picker_action_flash">Turn on flash</string>
     <string name="menu_color_picker_action_done">Done</string>
     <string name="action_help">Help</string>
-    <string name="title_activity_setting">SettingActivity</string>
     <string name="action_share">Share</string>
     <string-array name="color_mode">
         <item>HEX</item>
@@ -30,6 +27,48 @@
         <item>HSV</item>
         <item>CMYK</item>
     </string-array>
-    <string name="title_activity_create_palette">CreatePaletteActivity</string>
     <string name="recent_color">Recent colors</string>
+    <string name="create_palette">Create palette</string>
+    <string name="help_create_palette">
+        Create your custom palette depend on what you select: \n
+        - Number of colors: how many color in your palette. \n
+        - Alignment: color will sort in what orientation: horizon or vertical. \n
+        - Percent: percent of this color in total area. \n
+        - Color background: color which you want to create.
+    </string>
+    <string name="help_convert">
+        Convert from one color mode to another mode: \n
+        - With HEX mode: you can input your value with or without # \n
+        - With other mode (RGB, HSV) have more than one value, you must fill space between each value.
+    </string>
+    <string name="help_compare">
+        Compare two color in all color mode: \n
+        - To select color to compare, long press on one color and choose CHOOSE TO COMPARE in dialog. \n
+        - Repeat again with another color to compare with previous selection color.
+    </string>
+    <string name="help_material_colors">
+        List of material color - Design by Google. \n
+        Refer from <a>http://www.google.com/design/spec/style/color.html</a>
+    </string>
+    <string name="help_recent">
+        List of colors you copied to clipboard before. It will be cleared whenever you exit application \n
+        - To remove one color from list, long press on that color and choose DELETE. \n
+        - To remove all color, long press on any color and choose DELETE ALL.
+    </string>
+    <string name="help_bookmark">
+        List of colors you added to bookmark. \n
+        - To remove one color from list, long press on that color and choose DELETE. \n
+        - To remove all color, long press on any color and choose DELETE ALL.
+    </string>
+    <string name="action_license">License</string>
+
+    <string name="banner_ad_bottom_bookmark_unit_id">ca-app-pub-2775761353616133/9207241003</string>
+    <string name="banner_ad_bottom_palette_bg_unit_id">ca-app-pub-2775761353616133/9008764606</string>
+    <string name="banner_ad_bottom_main_image_picker_unit_id">ca-app-pub-2775761353616133/8810288209</string>
+    <string name="ires_ad_home_colors_unit_id">ca-app-pub-2775761353616133/7590907006</string>
+
+    <string name="ires_ad_create_palette_unit_id">ca-app-pub-2775761353616133/5996422603</string> <!--unused now -->
+    <string name="test_device_id_n910f">3E7EF1B1FF291A5F0D346540B4408BB8</string>
+    <string name="test_device_id_htc">C3437BE776DEB23CD37692ED082F3B0B</string>
+    <string name="test_device_id_g9208">8AD5EC15582AB56D5464879ACC45D4A0</string>
 </resources>

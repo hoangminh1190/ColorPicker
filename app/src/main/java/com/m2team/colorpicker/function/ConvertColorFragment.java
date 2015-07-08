@@ -1,14 +1,19 @@
 package com.m2team.colorpicker.function;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.m2team.colorpicker.R;
 import com.m2team.colorpicker.utils.ColorSpaceConverter;
 import com.m2team.colorpicker.utils.Utils;
@@ -22,18 +27,18 @@ import com.rey.material.widget.Spinner;
  */
 public class ConvertColorFragment extends Fragment implements View.OnClickListener {
 
-    Spinner spinnerLeft, spinnerRight;
-    EditText edtLeft, edtRight;
-    SnackBar snackBar;
-    Button btnConvert;
-    ColorSpaceConverter converter = new ColorSpaceConverter();
+    private Spinner spinnerLeft;
+    private Spinner spinnerRight;
+    private EditText edtLeft;
+    private EditText edtRight;
+    private SnackBar snackBar;
+    private final ColorSpaceConverter converter = new ColorSpaceConverter();
 
     public ConvertColorFragment() {
     }
 
     public static ConvertColorFragment newInstance() {
-        ConvertColorFragment fragment = new ConvertColorFragment();
-        return fragment;
+        return new ConvertColorFragment();
     }
 
     @Override
@@ -45,20 +50,33 @@ public class ConvertColorFragment extends Fragment implements View.OnClickListen
         edtLeft = (EditText) view.findViewById(R.id.edt_left);
         edtRight = (EditText) view.findViewById(R.id.edt_right);
         snackBar = (SnackBar) view.findViewById(R.id.snackbar);
-        btnConvert = (Button) view.findViewById(R.id.btn_convert);
+        Button btnConvert = (Button) view.findViewById(R.id.btn_convert);
         btnConvert.setOnClickListener(this);
+        edtRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Editable text = edtRight.getText();
+                if (text != null) {
+                    String s = text.toString();
+                    if (!TextUtils.isEmpty(s)) {
+                        Utils.copyToClipboard(getActivity(), s);
+                        Utils.showMessage(snackBar, "Copied " + s + " to clipboard");
+                    }
+                }
+            }
+        });
+        AdView adView = (AdView) view.findViewById(R.id.adView);
+        AdRequest.Builder builder = new AdRequest.Builder();
+        builder.addTestDevice(getString(R.string.test_device_id_n910f));
+        builder.addTestDevice(getString(R.string.test_device_id_htc));
+        AdRequest adRequest = builder.build();
+        adView.loadAd(adRequest);
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.row_spn, getResources().getStringArray(R.array.color_mode_convert));
         adapter.setDropDownViewResource(R.layout.row_spn_dropdown);
 
         spinnerLeft.setAdapter(adapter);
         spinnerLeft.setSelection(0);
-        String text;
-        if (!TextUtils.isEmpty(text = Utils.getFromClipboard(getActivity()))) {
-            if (text.contains("#")) {
-                text = text.substring(text.lastIndexOf("#"), text.length());
-            }
-            edtLeft.setText(text);
-        }
         spinnerRight.setAdapter(adapter);
         spinnerRight.setSelection(1);
         spinnerLeft.setOnItemClickListener(new Spinner.OnItemClickListener() {
@@ -67,6 +85,7 @@ public class ConvertColorFragment extends Fragment implements View.OnClickListen
                 if (position == 3) {
                     Utils.showMessage(snackBar, "Do not support this color mode currently");
                 }
+                spinnerLeft.setSelection(position);
                 return false;
             }
         });
@@ -77,11 +96,12 @@ public class ConvertColorFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_convert:
+                InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.hideSoftInputFromWindow(edtLeft.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 int leftPos = spinnerLeft.getSelectedItemPosition();
                 int rightPos = spinnerRight.getSelectedItemPosition();
                 String value = edtLeft.getText().toString();
                 if (TextUtils.isEmpty(value)) {
-                    snackBar.setVisibility(View.VISIBLE);
                     Utils.showMessage(snackBar, "Input color value to convert");
                     return;
                 } else {
@@ -102,7 +122,11 @@ public class ConvertColorFragment extends Fragment implements View.OnClickListen
                                     case 2:
                                         float[] hsv = new float[3];
                                         Color.RGBToHSV(rgb[0], rgb[1], rgb[2], hsv);
-                                        setResult(Utils.setStyleHSV_HSL(hsv));
+                                        String[] str = new String[3];
+                                        str[0] = Utils.round(hsv[0], 0) + "";
+                                        str[1] = Utils.round(hsv[1], 2) * 100 + "";
+                                        str[2] = Utils.round(hsv[2], 2) * 100 + "";
+                                        setResult(Utils.setStyleHSV_HSL(str));
                                         break;
                                     case 3:
                                         float[] cmyk = converter.rgbToCmyk(new float[]{rgb[0], rgb[1], rgb[2]});
@@ -175,7 +199,10 @@ public class ConvertColorFragment extends Fragment implements View.OnClickListen
         if (!TextUtils.isEmpty(result)) {
             edtRight.setText(result);
         } else {
-            Utils.showMessage(snackBar, "Cannot convert color value. Check input value again");
+            snackBar.applyStyle(R.style.SnackBarMultiLine)
+                    .text("Cannot convert color value. Check input value again")
+                    .duration(1500)
+                    .show();
         }
     }
 }

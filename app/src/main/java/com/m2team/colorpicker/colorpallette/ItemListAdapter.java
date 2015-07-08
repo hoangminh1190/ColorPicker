@@ -14,8 +14,8 @@ import java.util.List;
 
 public class ItemListAdapter extends BindableAdapter<ColorPalette.ColorGroup> {
 
-    public ItemListAdapter(Context context, List<ColorPalette.ColorGroup> items){
-        super(context, items);
+    public ItemListAdapter(Context context){
+        super(context, ColorPalette.ITEMS);
     }
 
     @Override
@@ -37,8 +37,8 @@ public class ItemListAdapter extends BindableAdapter<ColorPalette.ColorGroup> {
 
     private class ViewHolder {
 
-        RelativeLayout item;
-        TextView name;
+        final RelativeLayout item;
+        final TextView name;
 
         public ViewHolder(View view){
             item = (RelativeLayout)view.findViewById(R.id.item);

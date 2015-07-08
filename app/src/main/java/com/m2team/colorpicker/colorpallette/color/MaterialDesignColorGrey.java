@@ -18,12 +18,12 @@ public enum MaterialDesignColorGrey implements MaterialDesignColor{
     WHITE(R.color.md_white, R.string.md_white_color_name, R.string.md_white_color_code, R.color.md_black),
     ;
 
-    int color;
-    int colorName;
-    int colorCode;
-    int textColor;
+    final int color;
+    final int colorName;
+    final int colorCode;
+    final int textColor;
 
-    private MaterialDesignColorGrey(int color, int colorName, int colorCode, int textColor) {
+    MaterialDesignColorGrey(int color, int colorName, int colorCode, int textColor) {
         this.color = color;
         this.colorName = colorName;
         this.colorCode = colorCode;

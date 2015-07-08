@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.m2team.colorpicker.R;
-import com.m2team.colorpicker.utils.Applog;
 import com.m2team.colorpicker.utils.Constant;
 import com.m2team.colorpicker.utils.Utils;
-import com.rey.material.widget.SnackBar;
 
 import java.util.ArrayList;
 
@@ -22,19 +22,16 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class RecentColorActivityFragment extends Fragment implements IOnDataChangeListener {
-    SnackBar snackbar;
-    ListView listView;
-    ListAdapter adapter;
-    ArrayList<String> recentColors;
-    static Context context;
+    private ListView listView;
+    private ListAdapter adapter;
+    private ArrayList<String> recentColors;
+    private static Context context;
 
     public RecentColorActivityFragment() {
     }
 
     public static RecentColorActivityFragment newInstance() {
-        RecentColorActivityFragment fragment = new RecentColorActivityFragment();
-        Applog.e("newInstance");
-        return fragment;
+        return new RecentColorActivityFragment();
     }
 
     @Override
@@ -42,15 +39,20 @@ public class RecentColorActivityFragment extends Fragment implements IOnDataChan
                              Bundle savedInstanceState) {
         if (context == null) context = getActivity();
         View view = inflater.inflate(R.layout.fragment_bookmark, container, false);
-        snackbar = (SnackBar) view.findViewById(R.id.snackbar);
+        AdView mAdView = (AdView) view.findViewById(R.id.adView);
+        AdRequest.Builder builder = new AdRequest.Builder();
+        builder.addTestDevice(getString(R.string.test_device_id_n910f));
+        builder.addTestDevice(getString(R.string.test_device_id_htc));
+        AdRequest adRequest = builder.build();
+        mAdView.loadAd(adRequest);
         listView = (ListView) view.findViewById(R.id.list_bookmark_color);
+
         recentColors = new ArrayList<>(Utils.getSharedPrefStringSetValue(context, Constant.COLOR_RECENT_LIST));
-        adapter = new ListAdapter(context, recentColors, snackbar);
+        adapter = new ListAdapter(context, recentColors);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Applog.e("onItemClick");
                 ColorDetailDialogFragment colorDetailDialogFragment = new ColorDetailDialogFragment();
                 Bundle bundle = new Bundle();
                 String hex = recentColors.get(position);
@@ -63,7 +65,6 @@ public class RecentColorActivityFragment extends Fragment implements IOnDataChan
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Applog.e("onItemLongClick");
                 LongPressDialogFragment fragment = LongPressDialogFragment.newInstance(context);
                 Bundle bundle = new Bundle();
                 bundle.putString("value", recentColors.get(position));
@@ -80,8 +81,8 @@ public class RecentColorActivityFragment extends Fragment implements IOnDataChan
     @Override
     public void onDataChangeListener() {
         if (context != null && listView != null) {
-            recentColors = new ArrayList<>(Utils.getSharedPrefStringSetValue(context, Constant.COLOR_RECENT_LIST));
-            adapter = new ListAdapter(context, recentColors, snackbar);
+            recentColors = Utils.getSharedPrefStringSetValue(context, Constant.COLOR_RECENT_LIST);
+            adapter = new ListAdapter(context, recentColors);
             listView.setAdapter(adapter);
         }
     }

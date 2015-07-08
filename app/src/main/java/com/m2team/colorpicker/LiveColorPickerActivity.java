@@ -30,8 +30,6 @@ import com.m2team.colorpicker.livepicker.views.CameraColorPickerPreview;
 import com.m2team.colorpicker.utils.Constant;
 import com.m2team.colorpicker.utils.Utils;
 
-import java.util.ArrayList;
-
 
 /**
  * An {@link AppCompatActivity} for picking colors by using the camera of the device.
@@ -47,26 +45,26 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
     /**
      * A tag used in the logs.
      */
-    protected static final String TAG = LiveColorPickerActivity.class.getSimpleName();
+    private static final String TAG = LiveColorPickerActivity.class.getSimpleName();
 
     /**
      * The name of the property that animates the 'picked color'.
      * <p/>
      * Used by {@link LiveColorPickerActivity#mPickedColorProgressAnimator}.
      */
-    protected static final String PICKED_COLOR_PROGRESS_PROPERTY_NAME = "pickedColorProgress";
+    private static final String PICKED_COLOR_PROGRESS_PROPERTY_NAME = "pickedColorProgress";
 
     /**
      * The name of the property that animates the 'save completed'.
      * <p/>
      * Used by {@link LiveColorPickerActivity#mSaveCompletedProgressAnimator}.
      */
-    protected static final String SAVE_COMPLETED_PROGRESS_PROPERTY_NAME = "saveCompletedProgress";
+    private static final String SAVE_COMPLETED_PROGRESS_PROPERTY_NAME = "saveCompletedProgress";
 
     /**
      * The duration of the animation of the confirm save message. (in millis).
      */
-    protected static final long DURATION_CONFIRM_SAVE_MESSAGE = 400;
+    private static final long DURATION_CONFIRM_SAVE_MESSAGE = 400;
 
     /**
      * The delay before the confirm save message is hidden. (in millis).
@@ -74,7 +72,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
      * 1000 + DURATION_CONFIRM_SAVE_MESSAGE = 1400
      * The confirm save message should stay on screen for 1 second.
      */
-    protected static final long DELAY_HIDE_CONFIRM_SAVE_MESSAGE = 1400;
+    private static final long DELAY_HIDE_CONFIRM_SAVE_MESSAGE = 1400;
 
     /**
      * A safe way to get an instance of the back {@link Camera}.
@@ -92,118 +90,118 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
     /**
      * An instance of the {@link Camera} used for displaying the preview.
      */
-    protected Camera mCamera;
+    private Camera mCamera;
 
     /**
      * A boolean for knowing the orientation of the activity.
      */
-    protected boolean mIsPortrait;
+    private boolean mIsPortrait;
 
     /**
      * A simple {@link FrameLayout} that contains the preview.
      */
-    protected FrameLayout mPreviewContainer;
+    private FrameLayout mPreviewContainer;
 
     /**
      * The {@link CameraColorPickerPreview} used for the preview.
      */
-    protected CameraColorPickerPreview mCameraPreview;
+    private CameraColorPickerPreview mCameraPreview;
 
     /**
      * A reference to the {@link LiveColorPickerActivity.CameraAsyncTask} that gets the {@link Camera}.
      */
-    protected CameraAsyncTask mCameraAsyncTask;
+    private CameraAsyncTask mCameraAsyncTask;
 
     /**
      * The color selected by the user.
      * <p/>
      * The user "selects" a color by pointing a color with the camera.
      */
-    protected int mSelectedColor;
+    private int mSelectedColor;
 
     /**
      * The last picked color.
      * <p/>
      * The user "picks" a color by clicking the preview.
      */
-    protected int mLastPickedColor;
+    private int mLastPickedColor;
 
     /**
      * A simple {@link View} used for showing the picked color.
      */
-    protected View mPickedColorPreview;
+    private View mPickedColorPreview;
 
     /**
      * A simple {@link View} used for animating the color being picked.
      */
-    protected View mPickedColorPreviewAnimated;
+    private View mPickedColorPreviewAnimated;
 
     /**
      * An {@link ObjectAnimator} used for animating the color being picked.
      */
-    protected ObjectAnimator mPickedColorProgressAnimator;
+    private ObjectAnimator mPickedColorProgressAnimator;
 
     /**
      * The delta for the translation on the x-axis of the mPickedColorPreviewAnimated.
      */
-    protected float mTranslationDeltaX;
+    private float mTranslationDeltaX;
 
     /**
      * The delta for the translation on the y-axis of the mPickedColorPreviewAnimated.
      */
-    protected float mTranslationDeltaY;
+    private float mTranslationDeltaY;
 
     /**
      * A simple {@link TextView} used for showing a human readable representation of the picked color.
      */
-    protected TextView mColorPreviewText;
+    private TextView mColorPreviewText;
 
     /**
      * A simple {@link View} used for showing the selected color.
      */
-    protected View mPointerRing;
+    private View mPointerRing;
 
     /**
      * An icon representing the "save completed" state.
      */
-    protected View mSaveCompletedIcon;
+    private View mSaveCompletedIcon;
 
     /**
      * The save button.
      */
-    protected View mSaveButton;
+    private View mSaveButton;
 
     /**
      * A float representing the progress of the "save completed" state.
      */
-    protected float mSaveCompletedProgress;
+    private float mSaveCompletedProgress;
 
     /**
      * An {@link ObjectAnimator} used for animating the "save completed" state.
      */
-    protected ObjectAnimator mSaveCompletedProgressAnimator;
+    private ObjectAnimator mSaveCompletedProgressAnimator;
 
     /**
      * A simple {@link TextView} that confirms the user that the color has been saved successfully.
      */
-    protected TextView mConfirmSaveMessage;
+    private TextView mConfirmSaveMessage;
 
     /**
      * An {@link Interpolator} used for showing the mConfirmSaveMessage.
      */
-    protected Interpolator mConfirmSaveMessageInterpolator;
+    private Interpolator mConfirmSaveMessageInterpolator;
 
     /**
      * A {@link Runnable} that hide the confirm save message.
      * <p/>
      * This runnable is posted with some delayed on mConfirmSaveMessage each time a color is successfully saved.
      */
-    protected Runnable mHideConfirmSaveMessage;
+    private Runnable mHideConfirmSaveMessage;
 
     /**
      * A simple boolean for keeping track of the device's camera flash state.
      */
-    protected boolean mIsFlashOn;
+    private boolean mIsFlashOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,7 +212,19 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
         initSaveCompletedProgressAnimator();
         initViews();
         initTranslationDeltas();
+       // setupWindowTransition();
     }
+
+  /*  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupWindowTransition() {
+        Explode explode = new Explode();
+        explode.setDuration(2000);
+        getWindow().setEnterTransition(explode);
+
+        Fade fade = new Fade();
+        fade.setDuration(2000);
+        getWindow().setReturnTransition(fade);
+    }*/
 
     @Override
     protected void onResume() {
@@ -259,7 +269,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
         if (isFlashSupported()) {
             getMenuInflater().inflate(R.menu.menu_color_picker, menu);
             final MenuItem flashItem = menu.findItem(R.id.menu_color_picker_action_flash);
-            int flashIcon = mIsFlashOn ? R.drawable.ic_action_flash_off : R.drawable.ic_action_flash_on;
+            int flashIcon = mIsFlashOn ? R.drawable.ic_flash_off_white_24dp : R.drawable.ic_flash_on_white_24dp;
             flashItem.setIcon(flashIcon);
         }
         return true;
@@ -317,7 +327,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
      * Internally find the view by their ids and set the click listeners.
      */
 
-    protected void initViews() {
+    private void initViews() {
         mIsPortrait = getResources().getBoolean(R.bool.is_portrait);
         mPreviewContainer = (FrameLayout) findViewById(R.id.activity_color_picker_preview_container);
         mPickedColorPreview = findViewById(R.id.activity_color_picker_color_preview);
@@ -349,7 +359,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
      * <p/>
      * Set the translationY of mConfirmSaveMessage to - mConfirmSaveMessage.getMeasuredHeight() so that it is correctly placed before the first animation.
      */
-    protected void positionConfirmSaveMessage() {
+    private void positionConfirmSaveMessage() {
         ViewTreeObserver vto = mConfirmSaveMessage.getViewTreeObserver();
         if (vto.isAlive()) {
             vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -368,7 +378,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
      * Initialize the deltas used for the translation of the preview of the picked color.
      */
     @SuppressLint("NewApi")
-    protected void initTranslationDeltas() {
+    private void initTranslationDeltas() {
         ViewTreeObserver vto = mPointerRing.getViewTreeObserver();
         if (vto.isAlive()) {
             vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -397,7 +407,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
     /**
      * Initialize the animator used for the progress of the picked color.
      */
-    protected void initPickedColorProgressAnimator() {
+    private void initPickedColorProgressAnimator() {
         mPickedColorProgressAnimator = ObjectAnimator.ofFloat(this, PICKED_COLOR_PROGRESS_PROPERTY_NAME, 1f, 0f);
         mPickedColorProgressAnimator.setDuration(400);
         mPickedColorProgressAnimator.addListener(new Animator.AnimatorListener() {
@@ -431,7 +441,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
      *
      * @return Returns true if the device's camera supports flash, false otherwise.
      */
-    protected boolean isFlashSupported() {
+    private boolean isFlashSupported() {
         return getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
 
@@ -439,7 +449,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
      * Toggle the device's camera flash.
      * {@link LiveColorPickerActivity#isFlashSupported()} should be called before using this methods.
      */
-    protected void toggleFlash() {
+    private void toggleFlash() {
         if (mCamera != null) {
             final Camera.Parameters parameters = mCamera.getParameters();
             final String flashParameter = mIsFlashOn ? Camera.Parameters.FLASH_MODE_OFF : Camera.Parameters.FLASH_MODE_TORCH;
@@ -455,7 +465,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
     /**
      * Initialize the animator used for the progress of the "save completed" state.
      */
-    protected void initSaveCompletedProgressAnimator() {
+    private void initSaveCompletedProgressAnimator() {
         mSaveCompletedProgressAnimator = ObjectAnimator.ofFloat(this, SAVE_COMPLETED_PROGRESS_PROPERTY_NAME, 1f, 0f);
     }
 
@@ -466,7 +476,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
      *
      * @param previewColor the preview color to apply.
      */
-    protected void applyPreviewColor(int previewColor) {
+    private void applyPreviewColor(int previewColor) {
         setSaveCompleted(false);
         mPickedColorPreview.getBackground().setColorFilter(previewColor, PorterDuff.Mode.SRC_ATOP);
         mColorPreviewText.setText(ColorItem.makeHexString(previewColor));
@@ -477,7 +487,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
      *
      * @param pickedColor the color being picked.
      */
-    protected void animatePickedColor(int pickedColor) {
+    private void animatePickedColor(int pickedColor) {
         mLastPickedColor = pickedColor;
         if (mPickedColorProgressAnimator.isRunning()) {
             mPickedColorProgressAnimator.cancel();
@@ -492,7 +502,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
      *
      * @param isSaveCompleted the "save completed" state.
      */
-    protected void setSaveCompleted(boolean isSaveCompleted) {
+    private void setSaveCompleted(boolean isSaveCompleted) {
         mSaveButton.setEnabled(!isSaveCompleted);
         mSaveCompletedProgressAnimator.cancel();
         mSaveCompletedProgressAnimator.setFloatValues(mSaveCompletedProgress, isSaveCompleted ? 0f : 1f);
@@ -546,7 +556,7 @@ public class LiveColorPickerActivity extends AppCompatActivity implements Camera
         /**
          * The {@link android.view.ViewGroup.LayoutParams} used for adding the preview to its container.
          */
-        protected FrameLayout.LayoutParams mPreviewParams;
+        FrameLayout.LayoutParams mPreviewParams;
 
         @Override
         protected Camera doInBackground(Void... params) {

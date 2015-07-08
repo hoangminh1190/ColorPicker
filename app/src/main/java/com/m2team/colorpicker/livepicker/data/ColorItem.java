@@ -12,37 +12,37 @@ public class ColorItem implements Parcelable {
     /**
      * The id of the color.
      */
-    protected final long mId;
+    private final long mId;
 
     /**
      * An int representing the value of the color.
      */
-    protected int mColor;
+    private int mColor;
 
     /**
      * An optional name that the user can give to a color.
      */
-    protected String mName;
+    private String mName;
 
     /**
      * A long representing the creation time of the color. (In milliseconds).
      */
-    protected final long mCreationTime;
+    private final long mCreationTime;
 
     /**
      * A human readable string representation of the hexadecimal value of the color.
      */
-    protected transient String mHexString;
+    private transient String mHexString;
 
     /**
      * A human readable string representation of the RGB value of the color.
      */
-    protected transient String mRgbString;
+    private transient String mRgbString;
 
     /**
      * A human readable string representation of the HSV value of the color.
      */
-    protected transient String mHsvString;
+    private transient String mHsvString;
 
     /**
      * Create a new {@link ColorItem} with an id and a color.
@@ -185,7 +185,10 @@ public class ColorItem implements Parcelable {
      * @return a human readable representation of the hexadecimal value.
      */
     public static String makeHexString(int value) {
-        return "#" + Integer.toHexString(value).substring(2);
+        String s = Integer.toHexString(value);
+        if (s.length() > 2)
+            return "#" + s.substring(2);
+        return "";
     }
 
     /**
@@ -194,7 +197,7 @@ public class ColorItem implements Parcelable {
      * @param value the integer representation the color.
      * @return a human readable representation of the RGB value.
      */
-    public static String makeRgbString(int value) {
+    private static String makeRgbString(int value) {
         return "rgb(" + Color.red(value) + ", " + Color.green(value) + ", " + Color.blue(value) + ")";
     }
 
@@ -204,7 +207,7 @@ public class ColorItem implements Parcelable {
      * @param value the integer representation the color.
      * @return a human readable representation of the HSV value.
      */
-    public static String makeHsvString(int value) {
+    private static String makeHsvString(int value) {
         float[] hsv = new float[3];
         Color.colorToHSV(value, hsv);
         return "hsv(" + (int) hsv[0] + "°, " + (int) (hsv[1] * 100) + "%, " + (int) (hsv[2] * 100) + "%)";

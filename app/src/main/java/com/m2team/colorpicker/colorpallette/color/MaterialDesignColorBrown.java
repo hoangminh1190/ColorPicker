@@ -16,12 +16,12 @@ public enum MaterialDesignColorBrown implements MaterialDesignColor{
     BROWN_900(R.color.md_brown_900, R.string.md_brown_900_color_name, R.string.md_brown_900_color_code, R.color.md_white),
     ;
 
-    int color;
-    int colorName;
-    int colorCode;
-    int textColor;
+    final int color;
+    final int colorName;
+    final int colorCode;
+    final int textColor;
 
-    private MaterialDesignColorBrown(int color, int colorName, int colorCode, int textColor) {
+    MaterialDesignColorBrown(int color, int colorName, int colorCode, int textColor) {
         this.color = color;
         this.colorName = colorName;
         this.colorCode = colorCode;

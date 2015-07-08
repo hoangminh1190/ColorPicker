@@ -20,12 +20,12 @@ public enum MaterialDesignColorGreen implements MaterialDesignColor{
     GREEN_A700(R.color.md_green_a700, R.string.md_green_a700_color_name, R.string.md_green_a700_color_code, R.color.md_black),
     ;
 
-    public int color;
-    public int colorName;
-    public int colorCode;
-    public int textColor;
+    private final int color;
+    private final int colorName;
+    private final int colorCode;
+    private final int textColor;
 
-    private MaterialDesignColorGreen(int color, int colorName, int colorCode, int textColor) {
+    MaterialDesignColorGreen(int color, int colorName, int colorCode, int textColor) {
         this.color = color;
         this.colorName = colorName;
         this.colorCode = colorCode;

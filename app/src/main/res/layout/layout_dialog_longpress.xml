@@ -35,7 +35,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:gravity="center_vertical"
-        android:text="Choose to compare"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
         android:textColor="#FF000000" />
 

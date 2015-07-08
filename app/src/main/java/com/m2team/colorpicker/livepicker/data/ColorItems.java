@@ -51,7 +51,7 @@ public final class ColorItems {
     /**
      * A {@link Comparator} for sorting {@link com.m2team.colorpicker.livepicker.data.ColorItem}s in chronological order of creation.
      */
-    public static final Comparator<com.m2team.colorpicker.livepicker.data.ColorItem> CHRONOLOGICAL_COMPARATOR = new Comparator<com.m2team.colorpicker.livepicker.data.ColorItem>() {
+    private static final Comparator<com.m2team.colorpicker.livepicker.data.ColorItem> CHRONOLOGICAL_COMPARATOR = new Comparator<com.m2team.colorpicker.livepicker.data.ColorItem>() {
         @Override
         public int compare(com.m2team.colorpicker.livepicker.data.ColorItem lhs, com.m2team.colorpicker.livepicker.data.ColorItem rhs) {
             return (int) (rhs.getId() - lhs.getId());
@@ -97,7 +97,7 @@ public final class ColorItems {
      * @param context a {@link Context}.
      * @return a {@link List} of {@link com.m2team.colorpicker.livepicker.data.ColorItem}s.
      */
-    public static List<com.m2team.colorpicker.livepicker.data.ColorItem> getSavedColorItems(Context context) {
+    private static List<com.m2team.colorpicker.livepicker.data.ColorItem> getSavedColorItems(Context context) {
         return getSavedColorItems(getPreferences(context));
     }
 
@@ -108,7 +108,7 @@ public final class ColorItems {
      * @return a {@link List} of {@link com.m2team.colorpicker.livepicker.data.ColorItem}s.
      */
     @SuppressWarnings("unchecked")
-    public static List<com.m2team.colorpicker.livepicker.data.ColorItem> getSavedColorItems(SharedPreferences sharedPreferences) {
+    private static List<com.m2team.colorpicker.livepicker.data.ColorItem> getSavedColorItems(SharedPreferences sharedPreferences) {
         final String jsonColorItems = sharedPreferences.getString(KEY_SAVED_COLOR_ITEMS, "");
 
         // No saved colors were found.

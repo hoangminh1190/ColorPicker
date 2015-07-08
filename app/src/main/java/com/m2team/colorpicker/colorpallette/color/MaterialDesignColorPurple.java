@@ -20,12 +20,12 @@ public enum MaterialDesignColorPurple implements MaterialDesignColor{
     PURPLE_A700(R.color.md_purple_a700, R.string.md_purple_a700_color_name, R.string.md_purple_a700_color_code, R.color.md_white),
     ;
 
-    int color;
-    int colorName;
-    int colorCode;
-    int textColor;
+    final int color;
+    final int colorName;
+    final int colorCode;
+    final int textColor;
 
-    private MaterialDesignColorPurple(int color, int colorName, int colorCode, int textColor) {
+    MaterialDesignColorPurple(int color, int colorName, int colorCode, int textColor) {
         this.color = color;
         this.colorName = colorName;
         this.colorCode = colorCode;

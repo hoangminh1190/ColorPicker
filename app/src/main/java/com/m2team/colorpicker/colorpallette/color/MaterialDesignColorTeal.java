@@ -20,12 +20,12 @@ public enum MaterialDesignColorTeal implements MaterialDesignColor{
     TEAL_A700(R.color.md_teal_a700, R.string.md_teal_a700_color_name, R.string.md_teal_a700_color_code, R.color.md_black),
     ;
 
-    int color;
-    int colorName;
-    int colorCode;
-    int textColor;
+    final int color;
+    final int colorName;
+    final int colorCode;
+    final int textColor;
 
-    private MaterialDesignColorTeal(int color, int colorName, int colorCode, int textColor) {
+    MaterialDesignColorTeal(int color, int colorName, int colorCode, int textColor) {
         this.color = color;
         this.colorName = colorName;
         this.colorCode = colorCode;

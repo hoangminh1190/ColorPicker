@@ -3,6 +3,7 @@ package com.m2team.colorpicker.function;
 import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,15 +23,19 @@ import com.m2team.colorpicker.R;
 import com.m2team.colorpicker.utils.Constant;
 import com.m2team.colorpicker.utils.Utils;
 import com.rey.material.widget.Button;
-import com.rey.material.widget.SnackBar;
 
 public class ColorDetailDialogFragment extends DialogFragment implements View.OnClickListener {
 
-    TextView tvHEX, tvRGB, tvHSV, tvHSL, tvCMYK, tvLAB, tvXYZ;
-    LinearLayout ll1;
-    Button btnClose;
-    View viewBG;
-    String detailColor;
+    private TextView tvHEX;
+    private TextView tvRGB;
+    private TextView tvHSV;
+    private TextView tvHSL;
+    private TextView tvCMYK;
+    private TextView tvLAB;
+    private TextView tvXYZ;
+    private View viewBG;
+    private String detailColor;
+    private final StringBuilder sb = new StringBuilder();
 
     public ColorDetailDialogFragment() {
     }
@@ -57,9 +62,10 @@ public class ColorDetailDialogFragment extends DialogFragment implements View.On
 
 
     private void init(View view) {
-        ll1 = (LinearLayout) view.findViewById(R.id.ll1);
+        LinearLayout ll1 = (LinearLayout) view.findViewById(R.id.ll1);
         viewBG = view.findViewById(R.id.detail_color);
-        btnClose = (Button) view.findViewById(R.id.btn_close);
+        Button btnClose = (Button) view.findViewById(R.id.btn_close);
+        Button btnShare = (Button) view.findViewById(R.id.btn_share);
         tvHEX = (TextView) view.findViewById(R.id.tv_hex);
         tvRGB = (TextView) view.findViewById(R.id.tv_rgb);
         tvHSV = (TextView) view.findViewById(R.id.tv_hsv);
@@ -73,6 +79,7 @@ public class ColorDetailDialogFragment extends DialogFragment implements View.On
             view1.setOnClickListener(this);
         }
         btnClose.setOnClickListener(this);
+        btnShare.setOnClickListener(this);
     }
 
     private void fillValue(String color) {
@@ -91,6 +98,7 @@ public class ColorDetailDialogFragment extends DialogFragment implements View.On
         tvCMYK.setText("CMYK:\t" + Utils.setStyleCMYK(cmyk));
         tvLAB.setText("Lab:\t\t\t\t" + Utils.setStyleLab_XYZ(lab));
         tvXYZ.setText("XYZ:\t\t\t" + Utils.setStyleLab_XYZ(xyz));
+        sb.append(tvHEX.getText()).append("\n").append(tvRGB.getText()).append("\n").append(tvHSV.getText()).append("\n").append(tvHSL.getText()).append("\n").append(tvCMYK.getText()).append("\n").append(tvLAB.getText()).append("\n").append(tvXYZ.getText());
     }
 
     @NonNull
@@ -138,6 +146,13 @@ public class ColorDetailDialogFragment extends DialogFragment implements View.On
     public void onClick(View v) {
         if (v.getId() == R.id.btn_close) {
             if (getDialog() != null) getDialog().dismiss();
+        } else if (v.getId() == R.id.btn_share) {
+            Intent mShareIntent = new Intent();
+            mShareIntent.setAction(Intent.ACTION_SEND);
+            mShareIntent.setType("text/plain");
+            mShareIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
+            mShareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(mShareIntent);
         } else if (v instanceof TextView) {
             TextView textView = (TextView) v;
             CharSequence text = textView.getText();

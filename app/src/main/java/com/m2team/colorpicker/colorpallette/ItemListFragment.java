@@ -6,8 +6,6 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 
-import com.m2team.colorpicker.colorpallette.color.ColorPalette;
-
 public class ItemListFragment extends ListFragment {
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
@@ -21,7 +19,7 @@ public class ItemListFragment extends ListFragment {
         void onItemSelected(int position);
     }
 
-    private static Callbacks sDummyCallbacks = new Callbacks() {
+    private static final Callbacks sDummyCallbacks = new Callbacks() {
         @Override
         public void onItemSelected(int position){
         }
@@ -34,7 +32,7 @@ public class ItemListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        setListAdapter(new ItemListAdapter(getActivity(), ColorPalette.ITEMS));
+        setListAdapter(new ItemListAdapter(getActivity()));
     }
 
     @Override
